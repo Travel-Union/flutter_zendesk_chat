@@ -251,9 +251,12 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
     connectionScope = new ObservationScope();
     Chat.INSTANCE.providers().connectionProvider().observeConnectionStatus(connectionScope, new Observer<ConnectionStatus>() {
       @Override
-      public void update(ConnectionStatus status) {
-        mainHandler.post(() -> {
-          connectionStreamHandler.success(status.name());
+      public void update(final ConnectionStatus status) {
+        mainHandler.post(new Runnable() {
+          @Override
+          public void run() {
+            connectionStreamHandler.success(status.name());
+          }
         });
       }
     });
@@ -261,9 +264,12 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
     accountScope = new ObservationScope();
     Chat.INSTANCE.providers().accountProvider().observeAccount(accountScope, new Observer<Account>() {
       @Override
-      public void update(Account account) {
-        mainHandler.post(() -> {
-          accountStreamHandler.success(account.getStatus().name());
+      public void update(final Account account) {
+        mainHandler.post(new Runnable() {
+          @Override
+          public void run() {
+            accountStreamHandler.success(account.getStatus().name());
+          }
         });
       }
     });
@@ -272,24 +278,30 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
     Chat.INSTANCE.providers().chatProvider().observeChatState(chatScope, new Observer<ChatState>() {
       @Override
       public void update(ChatState chatState) {
-        List<ChatAgent> agents = new ArrayList<>();
+        final List<ChatAgent> agents = new ArrayList<>();
 
         for (Agent agent: chatState.getAgents()) {
           agents.add(ChatAgent.fromAgent(agent));
         }
 
-        mainHandler.post(() -> {
-          agentsStreamHandler.success(toJson(agents));
+        mainHandler.post(new Runnable() {
+          @Override
+          public void run() {
+            agentsStreamHandler.success(toJson(agents));
+          }
         });
 
-        List<ChatLogEvent> chatLogs = new ArrayList<>();
+        final List<ChatLogEvent> chatLogs = new ArrayList<>();
 
         for (ChatLog chatLog: chatState.getChatLogs()) {
           chatLogs.add(ChatLogEvent.fromChatLog(chatLog));
         }
 
-        mainHandler.post(() -> {
-          chatItemsStreamHandler.success(toJson(chatLogs));
+        mainHandler.post(new Runnable() {
+          @Override
+          public void run() {
+            chatItemsStreamHandler.success(toJson(chatLogs));
+          }
         });
       }
     });
