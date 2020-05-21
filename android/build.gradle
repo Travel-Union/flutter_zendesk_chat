@@ -1,0 +1,41 @@
+group 'com.travelunion.flutter_zendesk_chat'
+version '1.0'
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.5.0'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        google()
+        jcenter()
+        maven { url 'https://zendesk.jfrog.io/zendesk/repo' }
+    }
+}
+
+apply plugin: 'com.android.library'
+
+dependencies {
+    implementation group: 'com.zendesk', name: 'chat-providers', version: '2.0.0'
+}
+
+android {
+    compileSdkVersion 28
+
+    defaultConfig {
+        minSdkVersion 16
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+    compileOptions {
+        sourceCompatibility = 1.8
+    }
+}

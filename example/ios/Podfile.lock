@@ -1,0 +1,29 @@
+PODS:
+  - Flutter (1.0.0)
+  - flutter_zendesk_chat (0.0.1):
+    - Flutter
+    - ZendeskChatProvidersSDK (= 2.5.1)
+  - ZendeskChatProvidersSDK (2.5.1)
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - flutter_zendesk_chat (from `.symlinks/plugins/flutter_zendesk_chat/ios`)
+
+SPEC REPOS:
+  trunk:
+    - ZendeskChatProvidersSDK
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+  flutter_zendesk_chat:
+    :path: ".symlinks/plugins/flutter_zendesk_chat/ios"
+
+SPEC CHECKSUMS:
+  Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_zendesk_chat: 54f57c5e55f341bc46a6e8b75b8d72e80dae2c05
+  ZendeskChatProvidersSDK: 20fba23d07d6c1c5effb5a4348e758a11280dea3
+
+PODFILE CHECKSUM: c34e2287a9ccaa606aeceab922830efb9a6ff69a
+
+COCOAPODS: 1.9.1
