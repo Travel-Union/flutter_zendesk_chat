@@ -1,5 +1,6 @@
 package com.travelunion.flutter_zendesk_chat;
 
+import android.app.Activity;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
@@ -12,16 +13,16 @@ import com.travelunion.flutter_zendesk_chat.Models.ChatLogEvent;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import io.flutter.embedding.engine.plugins.FlutterPlugin;
+import io.flutter.embedding.engine.plugins.activity.ActivityAware;
+import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding;
 import io.flutter.plugin.common.EventChannel;
 import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import zendesk.chat.Account;
 import zendesk.chat.Agent;
@@ -40,7 +41,7 @@ import zendesk.chat.VisitorInfo;
 import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES;
 
 /** FlutterZendeskChatPlugin */
-public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandler {
+public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
   /// The MethodChannel that will the communication between Flutter and native Android
   ///
   /// This local reference serves to register the plugin with the Flutter Engine and unregister it
@@ -50,11 +51,10 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
   private EventChannel accountStatusEventsChannel;
   private EventChannel agentEventsChannel;
   private EventChannel chatItemsEventsChannel;
-  private PluginRegistry.Registrar registrar;
   private Handler mainHandler = new Handler(Looper.getMainLooper());
+  private Activity activity;
 
-  private FlutterZendeskChatPlugin(PluginRegistry.Registrar registrar) {
-    this.registrar = registrar;
+  private FlutterZendeskChatPlugin() {
   }
 
   private ObservationScope connectionScope = null;
@@ -96,7 +96,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
     final EventChannel agentEventsChannel = new EventChannel(registrar.messenger(),"flutter_zendesk_chat/agent_events");
     final EventChannel chatItemsEventsChannel = new EventChannel(registrar.messenger(),"flutter_zendesk_chat/chat_items_events");
 
-    FlutterZendeskChatPlugin plugin = new FlutterZendeskChatPlugin(registrar);
+    FlutterZendeskChatPlugin plugin = new FlutterZendeskChatPlugin();
 
     channel.setMethodCallHandler(plugin);
 
@@ -113,7 +113,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
         final String accountKey = call.argument("accountKey");
 
         try {
-          Chat.INSTANCE.init(registrar.activity(), accountKey);
+          Chat.INSTANCE.init(activity, accountKey);
 
           ProfileProvider profileProvider = Chat.INSTANCE.providers().profileProvider();
           ChatProvider chatProvider = Chat.INSTANCE.providers().chatProvider();
@@ -339,6 +339,26 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
       default:
         return null;
     }
+  }
+
+  @Override
+  public void onAttachedToActivity(@NonNull ActivityPluginBinding binding) {
+    this.activity = binding.getActivity();
+  }
+
+  @Override
+  public void onDetachedFromActivityForConfigChanges() {
+    this.activity = null;
+  }
+
+  @Override
+  public void onReattachedToActivityForConfigChanges(@NonNull ActivityPluginBinding binding) {
+    this.activity = binding.getActivity();
+  }
+
+  @Override
+  public void onDetachedFromActivity() {
+    this.activity = null;
   }
 
   private static class EventChannelStreamHandler implements EventChannel.StreamHandler {
