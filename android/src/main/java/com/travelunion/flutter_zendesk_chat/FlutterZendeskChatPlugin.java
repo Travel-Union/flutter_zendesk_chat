@@ -54,9 +54,6 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
   private Handler mainHandler = new Handler(Looper.getMainLooper());
   private Activity activity;
 
-  private FlutterZendeskChatPlugin() {
-  }
-
   private ObservationScope connectionScope = null;
   private ObservationScope accountScope = null;
   private ObservationScope chatScope = null;
@@ -97,6 +94,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
     final EventChannel chatItemsEventsChannel = new EventChannel(registrar.messenger(),"flutter_zendesk_chat/chat_items_events");
 
     FlutterZendeskChatPlugin plugin = new FlutterZendeskChatPlugin();
+    plugin.activity = registrar.activity();
 
     channel.setMethodCallHandler(plugin);
 
