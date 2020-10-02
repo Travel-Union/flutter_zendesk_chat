@@ -2,8 +2,8 @@ PODS:
   - Flutter (1.0.0)
   - flutter_zendesk_chat (0.0.1):
     - Flutter
-    - ZendeskChatProvidersSDK (= 2.5.1)
-  - ZendeskChatProvidersSDK (2.5.1)
+    - ZendeskChatProvidersSDK
+  - ZendeskChatProvidersSDK (2.9.0)
 
 DEPENDENCIES:
   - Flutter (from `Flutter`)
@@ -21,9 +21,9 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
-  flutter_zendesk_chat: 54f57c5e55f341bc46a6e8b75b8d72e80dae2c05
-  ZendeskChatProvidersSDK: 20fba23d07d6c1c5effb5a4348e758a11280dea3
+  flutter_zendesk_chat: 484b430ede2622e95acbb4e766add8443480f04d
+  ZendeskChatProvidersSDK: dd8cbf33c4b7209a8ee7945faa4d2cd3b609ff15
 
-PODFILE CHECKSUM: c34e2287a9ccaa606aeceab922830efb9a6ff69a
+PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 
-COCOAPODS: 1.9.1
+COCOAPODS: 1.10.0.beta.1

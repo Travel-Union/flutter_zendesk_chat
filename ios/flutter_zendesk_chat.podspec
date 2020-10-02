@@ -15,7 +15,7 @@ A new flutter plugin project.
   s.source           = { :path => '.' }
   s.source_files = 'Classes/**/*'
   s.dependency 'Flutter'
-  s.dependency 'ZendeskChatProvidersSDK', '2.5.1'
+  s.dependency 'ZendeskChatProvidersSDK'
   s.platform = :ios, '10.0'
 
   # Flutter.framework does not contain a i386 slice. Only x86_64 simulators are supported.

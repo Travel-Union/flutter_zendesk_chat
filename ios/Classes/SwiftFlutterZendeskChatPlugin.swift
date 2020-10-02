@@ -43,7 +43,7 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                 let tags = myArgs["tags"] as? [String];
                 
                 do {
-                    try self.initialize(accountKey: accountKey, department: department, name: name, email: email, phoneNumber: phoneNumber, tags: tags)
+                    try self.initialize(accountKey: accountKey, appId: myArgs["appId"] as? String, department: department, name: name, email: email, phoneNumber: phoneNumber, tags: tags)
                 } catch {
                     print("Chat error: \(error). End of chat error.")
                     result(false)
@@ -193,8 +193,13 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
         }
     }
     
-    func initialize(accountKey: String, department: String?, name: String, email: String?, phoneNumber: String?, tags: [String]?) throws {
-        Chat.initialize(accountKey: accountKey, queue: .main)
+    func initialize(accountKey: String, appId: String?, department: String?, name: String, email: String?, phoneNumber: String?, tags: [String]?) throws {
+        if(appId != nil) {
+            print(appId ?? "");
+            Chat.initialize(accountKey: accountKey, appId: appId, queue: .main)
+        } else {
+            Chat.initialize(accountKey: accountKey, queue: .main)
+        }
         
         let chatAPIConfiguration = ChatAPIConfiguration()
         
