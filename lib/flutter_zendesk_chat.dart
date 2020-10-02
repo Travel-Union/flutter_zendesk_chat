@@ -38,16 +38,20 @@ class FlutterZendeskChat {
 
   Future<void> startChat(String visitorName,
       {String accountKey,
+      String appId,
       String visitorEmail,
       String visitorPhone,
       String department,
+      String pushToken,
       List<String> tags}) async {
     return await _channel.invokeMethod('start', <String, dynamic>{
       'accountKey': accountKey,
+      'appId': appId,
       'name': visitorName,
       'email': visitorEmail,
       'phoneNumber': visitorPhone,
       'department': department,
+      'pushToken': pushToken,
       'tags': tags,
     });
   }

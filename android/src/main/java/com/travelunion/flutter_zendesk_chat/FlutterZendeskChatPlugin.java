@@ -36,6 +36,7 @@ import zendesk.chat.ObservationScope;
 import zendesk.chat.Observer;
 import zendesk.chat.OfflineForm;
 import zendesk.chat.ProfileProvider;
+import zendesk.chat.PushNotificationsProvider;
 import zendesk.chat.VisitorInfo;
 
 import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES;
@@ -109,18 +110,29 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
     switch(call.method) {
       case "start":
         final String accountKey = call.argument("accountKey");
+        final String appId = call.argument("appId");
+        final String pushToken = call.argument("pushToken");
 
         try {
-          Chat.INSTANCE.init(activity, accountKey);
+          if(appId == null) {
+            Chat.INSTANCE.init(activity, accountKey);
+          } else {
+            Chat.INSTANCE.init(activity, accountKey, appId);
+          }
 
           ProfileProvider profileProvider = Chat.INSTANCE.providers().profileProvider();
           ChatProvider chatProvider = Chat.INSTANCE.providers().chatProvider();
+          PushNotificationsProvider pushProvider = Chat.INSTANCE.providers().pushNotificationsProvider();
 
           VisitorInfo visitorInfo = VisitorInfo.builder()
                   .withPhoneNumber((String)call.argument("phoneNumber"))
                   .withEmail((String)call.argument("email"))
                   .withName((String)call.argument("name"))
                   .build();
+
+          if (pushProvider != null && pushToken != null) {
+            pushProvider.registerPushToken(pushToken);
+          }
 
           profileProvider.setVisitorInfo(visitorInfo, null);
 
