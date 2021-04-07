@@ -9,10 +9,10 @@ import 'package:meta/meta.dart';
 import 'dart:convert';
 
 class ChatItem extends MainModel {
-  ChatItem(Map attributes, [@visibleForTesting String os])
-      : super(attributes, os);
+  ChatItem(Map attributes, [@visibleForTesting String? os])
+      : super(attributes as Map<String, dynamic>, os);
 
-  String get id => attribute('id');
+  String? get id => attribute('id');
 
   DateTime get createTimestamp =>
       DateTime.fromMillisecondsSinceEpoch(attribute('create_timestamp'),
@@ -26,32 +26,32 @@ class ChatItem extends MainModel {
 
   DeliveryStatus get deliveryStatus => EnumHelper.asDeliveryStatus(attribute('delivery_status'));
 
-  String get displayName => attribute('display_name');
+  String? get displayName => attribute('display_name');
 
-  String get nick => attribute('nick');
+  String? get nick => attribute('nick');
 
   ChatParticipant get participant => EnumHelper.asChatParticipant(attribute('participant'));
 
-  String get message => attribute('message');
+  String? get message => attribute('message');
 
-  Attachment get attachment {
+  Attachment? get attachment {
     dynamic raw = attribute('attachment');
     return (raw != null && raw is Map) ? Attachment(raw) : null;
   }
 
-  int get uploadProgress => attribute('upload_progress');
+  int? get uploadProgress => attribute('upload_progress');
 
   ChatRating get rating => EnumHelper.asChatRating(attribute('previous_rating'));
 
   ChatRating get newRating => EnumHelper.asChatRating(attribute('current_rating'));
 
-  String get previousComment => attribute('previous_comment');
+  String? get previousComment => attribute('previous_comment');
 
-  String get newComment => attribute('current_comment');
+  String? get newComment => attribute('current_comment');
 
   static List<ChatItem> parseJson(String json,
-      [@visibleForTesting String os]) {
-    var out = List<ChatItem>();
+      [@visibleForTesting String? os]) {
+    List<ChatItem> out = [];
     jsonDecode(json).forEach((value) {
       out.add(ChatItem(value, os));
     });

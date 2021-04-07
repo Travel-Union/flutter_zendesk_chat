@@ -9,7 +9,7 @@ import 'package:flutter_zendesk_chat/models/chat_item.dart';
 import 'package:flutter_zendesk_chat/helpers/enum.dart';
 
 class FlutterZendeskChat {
-  static FlutterZendeskChat _instance;
+  static FlutterZendeskChat? _instance;
 
   static const MethodChannel _channel =
       const MethodChannel('flutter_zendesk_chat');
@@ -22,28 +22,28 @@ class FlutterZendeskChat {
   static const EventChannel _chatItemsEventsChannel =
       EventChannel('flutter_zendesk_chat/chat_items_events');
 
-  Stream<ConnectionStatus> _connectionStatusEventsStream;
-  Stream<AccountStatus> _accountStatusEventsStream;
-  Stream<List<Agent>> _agentEventsStream;
-  Stream<List<ChatItem>> _chatItemsEventsStream;
+  Stream<ConnectionStatus>? _connectionStatusEventsStream;
+  Stream<AccountStatus>? _accountStatusEventsStream;
+  Stream<List<Agent>>? _agentEventsStream;
+  Stream<List<ChatItem>>? _chatItemsEventsStream;
 
   factory FlutterZendeskChat() {
     if (_instance == null) {
       _instance = FlutterZendeskChat._();
     }
-    return _instance;
+    return _instance!;
   }
 
   FlutterZendeskChat._();
 
   Future<void> startChat(String visitorName,
-      {String accountKey,
-      String appId,
-      String visitorEmail,
-      String visitorPhone,
-      String department,
-      String pushToken,
-      List<String> tags}) async {
+      {String? accountKey,
+      String? appId,
+      String? visitorEmail,
+      String? visitorPhone,
+      String? department,
+      String? pushToken,
+      List<String>? tags}) async {
     return await _channel.invokeMethod('start', <String, dynamic>{
       'accountKey': accountKey,
       'appId': appId,
@@ -81,17 +81,17 @@ class FlutterZendeskChat {
     });
   }
 
-  Future<void> sendChatRating(ChatRating chatRating, {String comment}) async {
+  Future<void> sendChatRating(ChatRating chatRating, {String? comment}) async {
     return await _channel.invokeMethod('sendChatRating',
         <String, dynamic>{'rating': chatRating.toString(), 'comment': comment});
   }
 
-  Future<bool> sendOfflineMessage(String message) async {
+  Future<bool?> sendOfflineMessage(String message) async {
     return await _channel.invokeMethod(
         'sendOfflineMessage', <String, dynamic>{'message': message});
   }
 
-  Stream<ConnectionStatus> get onConnectionStatusChanged {
+  Stream<ConnectionStatus>? get onConnectionStatusChanged {
     if (_connectionStatusEventsStream == null) {
       _connectionStatusEventsStream = _connectionStatusEventsChannel
           .receiveBroadcastStream()
@@ -100,7 +100,7 @@ class FlutterZendeskChat {
     return _connectionStatusEventsStream;
   }
 
-  Stream<AccountStatus> get onAccountStatusChanged {
+  Stream<AccountStatus>? get onAccountStatusChanged {
     if (_accountStatusEventsStream == null) {
       _accountStatusEventsStream = _accountStatusEventsChannel
           .receiveBroadcastStream()
@@ -109,7 +109,7 @@ class FlutterZendeskChat {
     return _accountStatusEventsStream;
   }
 
-  Stream<List<Agent>> get onAgentsChanged {
+  Stream<List<Agent>>? get onAgentsChanged {
     if (_agentEventsStream == null) {
       _agentEventsStream = _agentEventsChannel
           .receiveBroadcastStream()
@@ -118,7 +118,7 @@ class FlutterZendeskChat {
     return _agentEventsStream;
   }
 
-  Stream<List<ChatItem>> get onChatItemsChanged {
+  Stream<List<ChatItem>>? get onChatItemsChanged {
     if (_chatItemsEventsStream == null) {
       _chatItemsEventsStream = _chatItemsEventsChannel
           .receiveBroadcastStream()

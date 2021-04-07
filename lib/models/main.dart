@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class MainModel {
   final Map<String, dynamic> _attributes;
-  final String _os;
+  final String? _os;
 
   MainModel(this._attributes, [@visibleForTesting this._os]);
 

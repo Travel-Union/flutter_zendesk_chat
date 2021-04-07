@@ -6,7 +6,7 @@ import 'package:flutter_zendesk_chat/enums/connection_status.dart';
 import 'package:flutter_zendesk_chat/enums/delivery_status.dart';
 
 class EnumHelper {
-  static ConnectionStatus asConnectionStatus(String val) {
+  static ConnectionStatus asConnectionStatus(String? val) {
     switch (val) {
       case 'UNREACHABLE':
         return ConnectionStatus.UNREACHABLE;
@@ -25,7 +25,7 @@ class EnumHelper {
     }
   }
 
-  static AccountStatus asAccountStatus(String val) {
+  static AccountStatus asAccountStatus(String? val) {
     switch (val) {
       case 'ONLINE':
         return AccountStatus.ONLINE;
@@ -36,7 +36,7 @@ class EnumHelper {
     }
   }
 
-  static ChatItemType asChatItemType(String val) {
+  static ChatItemType asChatItemType(String? val) {
     switch (val) {
       case 'MEMBER_JOIN':
         return ChatItemType.MEMBER_JOIN;
@@ -57,7 +57,7 @@ class EnumHelper {
     }
   }
 
-  static DeliveryStatus asDeliveryStatus(String val) {
+  static DeliveryStatus asDeliveryStatus(String? val) {
     switch (val) {
       case 'CANCELLED':
         return DeliveryStatus.CANCELLED;
@@ -82,7 +82,7 @@ class EnumHelper {
     }
   }
 
-  static ChatParticipant asChatParticipant(String val) {
+  static ChatParticipant asChatParticipant(String? val) {
     switch (val) {
       case 'VISITOR':
         return ChatParticipant.VISITOR;
@@ -97,7 +97,7 @@ class EnumHelper {
     }
   }
 
-  static ChatRating asChatRating(String val) {
+  static ChatRating asChatRating(String? val) {
     switch (val) {
       case 'GOOD':
         return ChatRating.GOOD;
