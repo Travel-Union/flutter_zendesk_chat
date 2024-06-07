@@ -165,14 +165,13 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                         case .success(_):
                             result(true)
                             return
-                        case .failure(let error):
-                            print("Failed with error: \(error)")
+                        case .failure(_):
                             result(false)
                             return
                         }
                     }
                 } catch {
-                    print("An error occurred: \(error)")
+                    // print("An error occurred: \(error)")
                     result(false)
                 }
             } else {
