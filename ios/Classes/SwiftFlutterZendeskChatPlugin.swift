@@ -171,6 +171,8 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                     default:
                         result(false)
                     }
+                } else {
+                    result(false)
                 }
             } catch {
                 print("Error caught: \(error)")
