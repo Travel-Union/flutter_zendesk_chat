@@ -48,7 +48,7 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                     print("Chat error: \(error). End of chat error.")
                     result(false)
                 }
-                
+                Chat.chatProvider?.sendMessage("Help me.")
                 result(true)
             } else {
                 result("'token' and 'language' are required in method: (beginKyc)")
@@ -161,7 +161,6 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                 do {
                     let visitorInfo = VisitorInfo(name: "Test", email: "clients@travelunion.eu", phoneNumber: "+48570851167")
                     let offlineForm = OfflineForm(visitorInfo: visitorInfo, departmentId: "Mobile Bankk", message: "Message")
-                    result(false)
                     try Chat.chatProvider?.sendOfflineForm(offlineForm) { (outcome) in
                         switch outcome {
                         case .success:
