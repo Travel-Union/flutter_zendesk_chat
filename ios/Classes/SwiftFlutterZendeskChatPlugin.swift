@@ -181,19 +181,9 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                 result(false)
             }
         } else if call.method == "endChat" {
-            Chat.instance?.chatProvider.endChat { (outcome) in
-                switch outcome {
-                case .success(_):
-                    self.unbindObservers()
-                    result(true)
-                    return;
-                case .failure(_):
-                    result(false)
-                    return;
-                default:
-                    result(false)
-                }
-            }
+            Chat.instance?.chatProvider.endChat()
+            self.unbindObservers()
+            result(true)
         } else {
             result(FlutterMethodNotImplemented)
         }
