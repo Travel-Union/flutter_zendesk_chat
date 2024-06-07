@@ -157,6 +157,7 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                 return
             }
             print("arguments OK")
+            result(false)
             if let myArgs = args as? [String: Any],
             let message: String = myArgs["message"] as? String
             {
