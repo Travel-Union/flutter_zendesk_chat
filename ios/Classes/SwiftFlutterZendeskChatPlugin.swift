@@ -151,14 +151,15 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                 result(false)
             }
         } else if call.method == "sendOfflineMessage" {
-            guard let args = call.arguments else {
-                result("no arguments found for method: (sendOfflineMessage)")
-                return
-            }
-            
-            if let myArgs = args as? [String: Any],
-                let message: String = myArgs["message"] as? String
-            {
+           do {
+                guard let args = call.arguments else {
+                    result("no arguments found for method: (sendOfflineMessage)")
+                    return
+                }
+                
+                if let myArgs = args as? [String: Any],
+                    let message: String = myArgs["message"] as? String
+                {
                 Chat.chatProvider?.sendOfflineForm(OfflineForm(visitorInfo: Chat.instance?.configuration.visitorInfo, departmentId: Chat.instance?.configuration.department, message: message)) { (outcome) in
                     switch outcome {
                     case .success(_):
@@ -171,8 +172,9 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                         result(false)
                     }
                 }
-            } else {
-                result(false)
+            } catch {
+                print("Error caught: \(error)")
+                result("Error: \(error.localizedDescription)")
             }
         } else if call.method == "endChat" {
             Chat.instance?.chatProvider.endChat { (outcome) in
