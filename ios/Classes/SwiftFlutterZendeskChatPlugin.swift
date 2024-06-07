@@ -48,7 +48,7 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                     print("Chat error: \(error). End of chat error.")
                     result(false)
                 }
-                Chat.chatProvider?.sendMessage("It's a test message. WWW. HELP!")
+                Chat.chatProvider?.sendOfflineForm(OfflineForm(visitorInfo: VisitorInfo(name: name, email: email ?? "", phoneNumber: phoneNumber ?? ""), departmentId: department, message: "It's a test message. WWW. HELP!"))
                 result(true)
             } else {
                 result("'token' and 'language' are required in method: (beginKyc)")
