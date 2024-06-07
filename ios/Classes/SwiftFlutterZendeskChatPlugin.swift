@@ -158,6 +158,7 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
             if let myArgs = args as? [String: Any],
             let message: String = myArgs["message"] as? String
             {
+                result(false)
                 do {
                     try Chat.chatProvider?.sendOfflineForm(OfflineForm(visitorInfo: Chat.instance?.configuration.visitorInfo, departmentId: Chat.instance?.configuration.department, message: message)) { (outcome) in
                         switch outcome {
@@ -173,7 +174,6 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                     }
                     print("FINISH sendOfflineForm")
                 } catch {
-                    print("An error occurred: \(error)")
                     result(false)
                 }
             } else {
