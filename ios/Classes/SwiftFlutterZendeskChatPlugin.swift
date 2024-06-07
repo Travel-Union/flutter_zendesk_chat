@@ -52,7 +52,7 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                         switch outcome {
                         case .success:
                             result(true)
-                            return;ąą
+                            return;
                         default:
                             result(false)
                         }
