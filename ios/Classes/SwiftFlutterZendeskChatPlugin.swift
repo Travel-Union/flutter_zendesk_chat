@@ -151,11 +151,12 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                 result(false)
             }
         } else if call.method == "sendOfflineMessage" {
+            print("HELLO sendOfflineMessage")
             guard let args = call.arguments else {
                 result("no arguments found for method: (sendOfflineMessage)")
                 return
             }
-
+            print("arguments OK")
             if let myArgs = args as? [String: Any],
             let message: String = myArgs["message"] as? String
             {
@@ -172,6 +173,7 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                             result(false)
                         }
                     }
+                    print("FINISH sendOfflineForm")
                 } catch {
                     print("An error occurred: \(error)")
                     result(false)
