@@ -168,6 +168,8 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                         case .failure(_):
                             result(false)
                             return
+                        default:
+                            result(false)
                         }
                     }
                 } catch {
