@@ -50,12 +50,9 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                 }
                 Chat.chatProvider?.sendMessage("It's a test message. WWW. HELP!") { (outcome) in
                         switch outcome {
-                        case .success(_):
+                        case .success:
                             result(true)
-                            return;
-                        case .failure(_):
-                            result(false)
-                            return;
+                            return;ąą
                         default:
                             result(false)
                         }
