@@ -36,7 +36,7 @@ class FlutterZendeskChat {
 
   FlutterZendeskChat._();
 
-  Future<void> startChat(String visitorName,
+  Future<bool?> startChat(String visitorName,
       {String? accountKey,
       String? appId,
       String? visitorEmail,
