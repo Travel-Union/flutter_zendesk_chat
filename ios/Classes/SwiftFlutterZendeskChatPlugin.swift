@@ -64,6 +64,7 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                 let message = myArgs["message"] as? String
             {
                 Chat.chatProvider?.sendMessage(message)
+                result(true)
             } else {
                 result(false)
             }
