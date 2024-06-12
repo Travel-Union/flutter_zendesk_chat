@@ -75,7 +75,7 @@ class FlutterZendeskChat {
         .invokeMethod('sendComment', <String, dynamic>{'comment': comment});
   }
 
-  Future<void> sendAttachment(String pathname) async {
+  Future<bool> sendAttachment(String pathname) async {
     return await _channel.invokeMethod('sendAttachment', <String, dynamic>{
       'pathname': pathname,
     });
