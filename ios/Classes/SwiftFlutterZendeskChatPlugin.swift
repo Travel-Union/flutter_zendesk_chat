@@ -48,6 +48,7 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                     print("Chat error: \(error). End of chat error.")
                     result(false)
                 }
+                
                 result(true)
             } else {
                 result("'token' and 'language' are required in method: (beginKyc)")
@@ -74,7 +75,6 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                         result(false)
                     }
                 }
-                result(true)
             } else {
                 result(false)
             }
@@ -87,8 +87,18 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
             if let myArgs = args as? [String: Any],
                 let messageId = myArgs["messageId"] as? String
             {
-                Chat.chatProvider?.resendFailedMessage(withId: messageId)
-                result(true)
+                Chat.chatProvider?.resendFailedMessage(withId: messageId) { (outcome) in
+                    switch outcome {
+                    case .success(_):
+                        result(true)
+                        return;
+                    case .failure(_):
+                        result(false)
+                        return;
+                    default:
+                        result(false)
+                    }
+                }
             } else {
                 result(false)
             }
@@ -101,8 +111,18 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
             if let myArgs = args as? [String: Any],
                 let comment = myArgs["comment"] as? String
             {
-                Chat.chatProvider?.sendChatComment(comment)
-                result(true)
+                Chat.chatProvider?.sendChatComment(comment) { (outcome) in
+                    switch outcome {
+                    case .success(_):
+                        result(true)
+                        return;
+                    case .failure(_):
+                        result(false)
+                        return;
+                    default:
+                        result(false)
+                    }
+                }
             } else {
                 result(false)
             }
@@ -115,32 +135,59 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
             if let myArgs = args as? [String: Any],
                 let rating: String = myArgs["rating"] as? String
             {
-                Chat.chatProvider?.sendChatRating(SwiftFlutterZendeskChatPlugin.stringToRating(value: rating))
-                result(true)
+                Chat.chatProvider?.sendChatRating(SwiftFlutterZendeskChatPlugin.stringToRating(value: rating)) { (outcome) in
+                    switch outcome {
+                    case .success(_):
+                        result(true)
+                        return;
+                    case .failure(_):
+                        result(false)
+                        return;
+                    default:
+                        result(false)
+                    }
+                }
             } else {
                 result(false)
             }
         } else if call.method == "sendOfflineMessage" {
             guard let args = call.arguments else {
-                result(false)
+                result("no arguments found for method: (sendOfflineMessage)")
                 return
             }
+            
             if let myArgs = args as? [String: Any],
-            let message: String = myArgs["message"] as? String
+                let message: String = myArgs["message"] as? String
             {
-                do {
-                    try Chat.chatProvider?.sendOfflineForm(OfflineForm(visitorInfo: Chat.instance?.configuration.visitorInfo, departmentId: Chat.instance?.configuration.department, message: message))
-                    result(true)
-                } catch {
-                    result(false)
+                Chat.chatProvider?.sendOfflineForm(OfflineForm(visitorInfo: Chat.instance?.configuration.visitorInfo, departmentId: Chat.instance?.configuration.department, message: message)) { (outcome) in
+                    switch outcome {
+                    case .success(_):
+                        result(true)
+                        return;
+                    case .failure(_):
+                        result(false)
+                        return;
+                    default:
+                        result(false)
+                    }
                 }
             } else {
                 result(false)
             }
         } else if call.method == "endChat" {
-            Chat.instance?.chatProvider.endChat()
-            self.unbindObservers()
-            result(true)
+            Chat.instance?.chatProvider.endChat { (outcome) in
+                switch outcome {
+                case .success(_):
+                    self.unbindObservers()
+                    result(true)
+                    return;
+                case .failure(_):
+                    result(false)
+                    return;
+                default:
+                    result(false)
+                }
+            }
         } else {
             result(FlutterMethodNotImplemented)
         }
@@ -148,26 +195,24 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
     
     func initialize(accountKey: String, appId: String?, department: String?, name: String, email: String?, phoneNumber: String?, tags: [String]?) throws {
         let chatAPIConfiguration = ChatAPIConfiguration()
+        if(tags != nil){
+            chatAPIConfiguration.tags = tags!
+        }
+        
         if(department != nil) {
             chatAPIConfiguration.department = department
         }
         
         chatAPIConfiguration.visitorInfo = VisitorInfo(name: name, email: email ?? "", phoneNumber: phoneNumber ?? "")
         Chat.instance?.configuration = chatAPIConfiguration
-
-        if(tags != nil){
-            chatAPIConfiguration.tags = tags!
-        }
-
+        
         if(appId != nil) {
             print(appId ?? "");
             Chat.initialize(accountKey: accountKey, appId: appId, queue: .main)
         } else {
             Chat.initialize(accountKey: accountKey, queue: .main)
         }
-        
         self.initObservers()
-        
         Chat.connectionProvider?.connect()
     }
     
