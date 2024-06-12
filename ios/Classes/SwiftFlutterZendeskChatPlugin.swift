@@ -62,7 +62,18 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
             if let myArgs = args as? [String: Any],
                 let message = myArgs["message"] as? String
             {
-                Chat.chatProvider?.sendMessage(message)
+                Chat.chatProvider?.sendMessage(message) { (outcome) in
+                    switch outcome {
+                    case .success(_):
+                        result(true)
+                        return;
+                    case .failure(_):
+                        result(false)
+                        return;
+                    default:
+                        result(false)
+                    }
+                }
                 result(true)
             } else {
                 result(false)
@@ -143,7 +154,7 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
         
         chatAPIConfiguration.visitorInfo = VisitorInfo(name: name, email: email ?? "", phoneNumber: phoneNumber ?? "")
         Chat.instance?.configuration = chatAPIConfiguration
-        
+
         if(tags != nil){
             chatAPIConfiguration.tags = tags!
         }
