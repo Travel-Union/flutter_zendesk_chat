@@ -43,9 +43,11 @@ import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES;
 
 /** FlutterZendeskChatPlugin */
 public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
-  /// The MethodChannel that will the communication between Flutter and native Android
+  /// The MethodChannel that will the communication between Flutter and native
+  /// Android
   ///
-  /// This local reference serves to register the plugin with the Flutter Engine and unregister it
+  /// This local reference serves to register the plugin with the Flutter Engine
+  /// and unregister it
   /// when the Flutter Engine is detached from the Activity
   private MethodChannel channel;
   private EventChannel connectionStatusEventsChannel;
@@ -66,10 +68,14 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
   @Override
   public void onAttachedToEngine(@NonNull FlutterPluginBinding flutterPluginBinding) {
     channel = new MethodChannel(flutterPluginBinding.getBinaryMessenger(), "flutter_zendesk_chat");
-    connectionStatusEventsChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(), "flutter_zendesk_chat/connection_status_events");
-    accountStatusEventsChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(),"flutter_zendesk_chat/account_status_events");
-    agentEventsChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(),"flutter_zendesk_chat/agent_events");
-    chatItemsEventsChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(),"flutter_zendesk_chat/chat_items_events");
+    connectionStatusEventsChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(),
+        "flutter_zendesk_chat/connection_status_events");
+    accountStatusEventsChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(),
+        "flutter_zendesk_chat/account_status_events");
+    agentEventsChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(),
+        "flutter_zendesk_chat/agent_events");
+    chatItemsEventsChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(),
+        "flutter_zendesk_chat/chat_items_events");
     connectionStatusEventsChannel.setStreamHandler(this.connectionStreamHandler);
     accountStatusEventsChannel.setStreamHandler(this.accountStreamHandler);
     agentEventsChannel.setStreamHandler(this.agentsStreamHandler);
@@ -77,22 +83,31 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
     channel.setMethodCallHandler(this);
   }
 
-  // This static function is optional and equivalent to onAttachedToEngine. It supports the old
+  // This static function is optional and equivalent to onAttachedToEngine. It
+  // supports the old
   // pre-Flutter-1.12 Android projects. You are encouraged to continue supporting
-  // plugin registration via this function while apps migrate to use the new Android APIs
+  // plugin registration via this function while apps migrate to use the new
+  // Android APIs
   // post-flutter-1.12 via https://flutter.dev/go/android-project-migration.
   //
-  // It is encouraged to share logic between onAttachedToEngine and registerWith to keep
-  // them functionally equivalent. Only one of onAttachedToEngine or registerWith will be called
-  // depending on the user's project. onAttachedToEngine or registerWith must both be defined
+  // It is encouraged to share logic between onAttachedToEngine and registerWith
+  // to keep
+  // them functionally equivalent. Only one of onAttachedToEngine or registerWith
+  // will be called
+  // depending on the user's project. onAttachedToEngine or registerWith must both
+  // be defined
   // in the same class.
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel = new MethodChannel(registrar.messenger(), "flutter_zendesk_chat");
 
-    final EventChannel connectionStatusEventsChannel = new EventChannel(registrar.messenger(), "flutter_zendesk_chat/connection_status_events");
-    final EventChannel accountStatusEventsChannel = new EventChannel(registrar.messenger(),"flutter_zendesk_chat/account_status_events");
-    final EventChannel agentEventsChannel = new EventChannel(registrar.messenger(),"flutter_zendesk_chat/agent_events");
-    final EventChannel chatItemsEventsChannel = new EventChannel(registrar.messenger(),"flutter_zendesk_chat/chat_items_events");
+    final EventChannel connectionStatusEventsChannel = new EventChannel(registrar.messenger(),
+        "flutter_zendesk_chat/connection_status_events");
+    final EventChannel accountStatusEventsChannel = new EventChannel(registrar.messenger(),
+        "flutter_zendesk_chat/account_status_events");
+    final EventChannel agentEventsChannel = new EventChannel(registrar.messenger(),
+        "flutter_zendesk_chat/agent_events");
+    final EventChannel chatItemsEventsChannel = new EventChannel(registrar.messenger(),
+        "flutter_zendesk_chat/chat_items_events");
 
     FlutterZendeskChatPlugin plugin = new FlutterZendeskChatPlugin();
     plugin.activity = registrar.activity();
@@ -107,14 +122,14 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
 
   @Override
   public void onMethodCall(@NonNull MethodCall call, @NonNull Result result) {
-    switch(call.method) {
+    switch (call.method) {
       case "start":
         final String accountKey = call.argument("accountKey");
         final String appId = call.argument("appId");
         final String pushToken = call.argument("pushToken");
 
         try {
-          if(appId == null) {
+          if (appId == null) {
             Chat.INSTANCE.init(activity, accountKey);
           } else {
             Chat.INSTANCE.init(activity, accountKey, appId);
@@ -125,10 +140,10 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
           PushNotificationsProvider pushProvider = Chat.INSTANCE.providers().pushNotificationsProvider();
 
           VisitorInfo visitorInfo = VisitorInfo.builder()
-                  .withPhoneNumber((String)call.argument("phoneNumber"))
-                  .withEmail((String)call.argument("email"))
-                  .withName((String)call.argument("name"))
-                  .build();
+              .withPhoneNumber((String) call.argument("phoneNumber"))
+              .withEmail((String) call.argument("email"))
+              .withName((String) call.argument("name"))
+              .build();
 
           if (pushProvider != null && pushToken != null) {
             pushProvider.registerPushToken(pushToken);
@@ -203,7 +218,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
             return;
           }
           Chat.INSTANCE.providers().chatProvider().sendFile(file, null);
-          result.success(null);
+          result.success(true);
         }
         break;
       case "sendChatRating": {
@@ -240,7 +255,8 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
           return;
         }
 
-        Chat.INSTANCE.providers().chatProvider().sendOfflineForm(OfflineForm.builder((String)call.argument("message")).withVisitorInfo(info).build(), null);
+        Chat.INSTANCE.providers().chatProvider().sendOfflineForm(
+            OfflineForm.builder((String) call.argument("message")).withVisitorInfo(info).build(), null);
 
         result.success(null);
 
@@ -259,17 +275,18 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
     unbindChatListeners();
 
     connectionScope = new ObservationScope();
-    Chat.INSTANCE.providers().connectionProvider().observeConnectionStatus(connectionScope, new Observer<ConnectionStatus>() {
-      @Override
-      public void update(final ConnectionStatus status) {
-        mainHandler.post(new Runnable() {
+    Chat.INSTANCE.providers().connectionProvider().observeConnectionStatus(connectionScope,
+        new Observer<ConnectionStatus>() {
           @Override
-          public void run() {
-            connectionStreamHandler.success(status.name());
+          public void update(final ConnectionStatus status) {
+            mainHandler.post(new Runnable() {
+              @Override
+              public void run() {
+                connectionStreamHandler.success(status.name());
+              }
+            });
           }
         });
-      }
-    });
 
     accountScope = new ObservationScope();
     Chat.INSTANCE.providers().accountProvider().observeAccount(accountScope, new Observer<Account>() {
@@ -290,7 +307,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
       public void update(ChatState chatState) {
         final List<ChatAgent> agents = new ArrayList<>();
 
-        for (Agent agent: chatState.getAgents()) {
+        for (Agent agent : chatState.getAgents()) {
           agents.add(ChatAgent.fromAgent(agent));
         }
 
@@ -303,7 +320,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
 
         final List<ChatLogEvent> chatLogs = new ArrayList<>();
 
-        for (ChatLog chatLog: chatState.getChatLogs()) {
+        for (ChatLog chatLog : chatState.getChatLogs()) {
           chatLogs.add(ChatLogEvent.fromChatLog(chatLog));
         }
 
@@ -334,10 +351,10 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
 
   private String toJson(Object object) {
     return new GsonBuilder()
-            .setFieldNamingPolicy(LOWER_CASE_WITH_UNDERSCORES)
-            .create()
-            .toJson(object)
-            .replaceAll("\\$(string|int|bool)\":", "\":");
+        .setFieldNamingPolicy(LOWER_CASE_WITH_UNDERSCORES)
+        .create()
+        .toJson(object)
+        .replaceAll("\\$(string|int|bool)\":", "\":");
   }
 
   private ChatRating toChatLogRating(String rating) {
