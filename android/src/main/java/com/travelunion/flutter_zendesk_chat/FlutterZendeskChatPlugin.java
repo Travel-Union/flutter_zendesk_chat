@@ -194,6 +194,15 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
           result.success(null);
         }
         break;
+      case "resendFailedAttachment":
+        if (Chat.INSTANCE.providers().connectionProvider().getConnectionStatus() != ConnectionStatus.CONNECTED) {
+          result.error("CHAT_NOT_STARTED", null, null);
+        } else {
+          String messageId = call.argument("messageId");
+          Chat.INSTANCE.providers().chatProvider().resendFailedFile(messageId);
+          result.success(null);
+        }
+        break;
       case "sendComment":
         if (Chat.INSTANCE.providers().connectionProvider().getConnectionStatus() != ConnectionStatus.CONNECTED) {
           result.error("CHAT_NOT_STARTED", null, null);

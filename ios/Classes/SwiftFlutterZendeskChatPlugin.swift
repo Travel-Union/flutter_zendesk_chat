@@ -150,6 +150,29 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                     }
                 })
             }
+        } else if call.method == "resendFailedAttachment" {
+            guard let args = call.arguments else {
+                result("no arguments found for method: (sendAttachment)")
+                return
+            }
+            if let myArgs = args as? [String: Any],
+                let messageId: String = myArgs["messageId"] as? String
+            {
+                Chat.chatProvider?.resendFailedFile(withId: messageId, onProgress: { (progress) in
+                    print(progress ?? "");
+                }, completion: { outcome in
+                    switch outcome {
+                    case .success:
+                        result(true)
+                        return;
+                    case .failure(_):
+                        result(false)
+                        return;
+                    default:
+                        result(false)
+                    }
+                })
+            }
         } else if call.method == "sendChatRating" {
             guard let args = call.arguments else {
                 result("no arguments found for method: (sendChatRating)")

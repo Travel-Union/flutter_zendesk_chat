@@ -70,6 +70,11 @@ class FlutterZendeskChat {
         'resendMessage', <String, dynamic>{'messageId': messageId});
   }
 
+  Future<void> resendFailedAttachment(String messageId) async {
+    return await _channel.invokeMethod(
+        'resendFailedAttachment', <String, dynamic>{'messageId': messageId});
+  }
+
   Future<void> sendComment(String comment) async {
     return await _channel
         .invokeMethod('sendComment', <String, dynamic>{'comment': comment});
