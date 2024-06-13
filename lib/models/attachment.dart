@@ -27,7 +27,7 @@ class Attachment extends MainModel {
     return attribute('url');
   }
 
-  File? get file {
+  dynamic get file {
     return attribute('file');
   }
 
