@@ -22,7 +22,10 @@ public class ChatAttachment {
     }
 
     public static ChatAttachment fromAttachment(Attachment attachment) {
-        ChatAttachmentMetadata metadata = ChatAttachmentMetadata.fromMetadata(attachment.getMetadata());
+        ChatAttachmentMetadata metadata = null; // Initialize metadata as null
+        if (attachment.getMetadata() != null) {
+            metadata = ChatAttachmentMetadata.fromMetadata(attachment.getMetadata());
+        }
         File file = attachment.getFile();
         String mimeType = attachment.getMimeType();
         String name = attachment.getName();

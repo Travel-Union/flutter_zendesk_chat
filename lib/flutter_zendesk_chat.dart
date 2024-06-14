@@ -36,7 +36,7 @@ class FlutterZendeskChat {
 
   FlutterZendeskChat._();
 
-  Future<void> startChat(String visitorName,
+  Future<bool?> startChat(String visitorName,
       {String? accountKey,
       String? appId,
       String? visitorEmail,
@@ -70,12 +70,17 @@ class FlutterZendeskChat {
         'resendMessage', <String, dynamic>{'messageId': messageId});
   }
 
+  Future<void> resendFailedAttachment(String messageId) async {
+    return await _channel.invokeMethod(
+        'resendFailedAttachment', <String, dynamic>{'messageId': messageId});
+  }
+
   Future<void> sendComment(String comment) async {
     return await _channel
         .invokeMethod('sendComment', <String, dynamic>{'comment': comment});
   }
 
-  Future<void> sendAttachment(String pathname) async {
+  Future<bool> sendAttachment(String pathname) async {
     return await _channel.invokeMethod('sendAttachment', <String, dynamic>{
       'pathname': pathname,
     });

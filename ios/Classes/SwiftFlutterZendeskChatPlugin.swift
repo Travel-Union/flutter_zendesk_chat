@@ -126,6 +126,53 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
             } else {
                 result(false)
             }
+        } else if call.method == "sendAttachment" {
+            guard let args = call.arguments else {
+                result("no arguments found for method: (sendAttachment)")
+                return
+            }
+            if let myArgs = args as? [String: Any],
+                let pathname: String = myArgs["pathname"] as? String,
+                let fileUrl: URL = URL.init(fileURLWithPath: pathname) as? URL
+            {
+                Chat.chatProvider?.sendFile(url: fileUrl, onProgress: { (progress) in
+                    print(progress ?? "");
+                }, completion: { outcome in
+                    switch outcome {
+                    case .success:
+                        result(true)
+                        return;
+                    case .failure(_):
+                        result(false)
+                        return;
+                    default:
+                        result(false)
+                    }
+                })
+            }
+        } else if call.method == "resendFailedAttachment" {
+            guard let args = call.arguments else {
+                result("no arguments found for method: (sendAttachment)")
+                return
+            }
+            if let myArgs = args as? [String: Any],
+                let messageId: String = myArgs["messageId"] as? String
+            {
+                Chat.chatProvider?.resendFailedFile(withId: messageId, onProgress: { (progress) in
+                    print(progress ?? "");
+                }, completion: { outcome in
+                    switch outcome {
+                    case .success:
+                        result(true)
+                        return;
+                    case .failure(_):
+                        result(false)
+                        return;
+                    default:
+                        result(false)
+                    }
+                })
+            }
         } else if call.method == "sendChatRating" {
             guard let args = call.arguments else {
                 result("no arguments found for method: (sendChatRating)")
@@ -266,8 +313,8 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                     _message = _messageLog.message;
                 } else if let _ratingLog = log as? ChatRating {
                     _currentRating = SwiftFlutterZendeskChatPlugin.ratingoString(rating: _ratingLog.rating);
-                } else if let _attachmentLog = log as? ChatAttachment {
-                    _attachment = ChatLogAttachment(mimeType: _attachmentLog.mimeType, name: _attachmentLog.name, size: _attachmentLog.size, url: _attachmentLog.url, localUrl: _attachmentLog.localURL)
+                } else if let _attachmentLog = log as? ChatAttachmentMessage {
+                    _attachment = ChatLogAttachment(mimeType: _attachmentLog.attachment.mimeType, name: _attachmentLog.attachment.name, size: _attachmentLog.attachment.size, url: _attachmentLog.attachment.url, localUrl: _attachmentLog.attachment.localURL)
                 } else if let _ratingLog = log as? ChatComment {
                     _comment = _ratingLog.comment;
                     _newComment = _ratingLog.newComment;

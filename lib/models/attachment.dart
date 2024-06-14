@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_zendesk_chat/models/main.dart';
 
@@ -23,6 +25,10 @@ class Attachment extends MainModel {
 
   String? get url {
     return attribute('url');
+  }
+
+  dynamic get file {
+    return attribute('file');
   }
 
   String? get thumbnailUrl {
