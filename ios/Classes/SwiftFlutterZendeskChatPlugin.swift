@@ -194,15 +194,7 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
     }
     
     func initialize(accountKey: String, appId: String?, department: String?, name: String, email: String?, phoneNumber: String?, tags: [String]?) throws {
-        if(appId != nil) {
-            print(appId ?? "");
-            Chat.initialize(accountKey: accountKey, appId: appId, queue: .main)
-        } else {
-            Chat.initialize(accountKey: accountKey, queue: .main)
-        }
-        
         let chatAPIConfiguration = ChatAPIConfiguration()
-        
         if(tags != nil){
             chatAPIConfiguration.tags = tags!
         }
@@ -214,8 +206,13 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
         chatAPIConfiguration.visitorInfo = VisitorInfo(name: name, email: email ?? "", phoneNumber: phoneNumber ?? "")
         Chat.instance?.configuration = chatAPIConfiguration
         
+        if(appId != nil) {
+            print(appId ?? "");
+            Chat.initialize(accountKey: accountKey, appId: appId, queue: .main)
+        } else {
+            Chat.initialize(accountKey: accountKey, queue: .main)
+        }
         self.initObservers()
-        
         Chat.connectionProvider?.connect()
     }
     
