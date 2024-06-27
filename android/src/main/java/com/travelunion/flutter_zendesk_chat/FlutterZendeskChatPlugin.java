@@ -199,7 +199,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
           result.error("CHAT_NOT_STARTED", null, null);
         } else {
           String messageId = call.argument("messageId");
-          Chat.INSTANCE.providers().chatProvider().resendFailedFile(messageId);
+          Chat.INSTANCE.providers().chatProvider().resendFailedFile(messageId, null);
           result.success(null);
         }
         break;
