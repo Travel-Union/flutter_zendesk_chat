@@ -206,6 +206,7 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
             if let myArgs = args as? [String: Any],
                 let message: String = myArgs["message"] as? String
             {
+                print("Chat.instance?.configuration.visitorInfo \(Chat.instance?.configuration.visitorInfo.phoneNumber)")
                 Chat.chatProvider?.sendOfflineForm(OfflineForm(visitorInfo: Chat.instance?.configuration.visitorInfo, departmentId: Chat.instance?.configuration.department, message: message)) { (outcome) in
                     switch outcome {
                     case .success(_):
@@ -249,7 +250,7 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
         if(department != nil) {
             chatAPIConfiguration.department = department
         }
-        
+        print("phoneNumber \(phoneNumber)")
         chatAPIConfiguration.visitorInfo = VisitorInfo(name: name, email: email ?? "", phoneNumber: phoneNumber ?? "")
         Chat.instance?.configuration = chatAPIConfiguration
         
