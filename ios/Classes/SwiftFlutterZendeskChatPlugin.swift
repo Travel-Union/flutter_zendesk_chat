@@ -206,6 +206,7 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
             if let myArgs = args as? [String: Any],
                 let message: String = myArgs["message"] as? String
             {
+                print("message \(message)")
                 if let v = Chat.instance?.configuration.visitorInfo {
                     print("Chat.instance?.configuration.visitorInfo \(v.email)")
                 }
