@@ -207,20 +207,19 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
             if let myArgs = args as? [String: Any],
                 let message: String = myArgs["message"] as? String
             {
-                print("message \(message)")
-                if let v = chatAPIConfiguration?.visitorInfo {
+                if let chatAPIConfiguration = chatAPIConfiguration {
                     print("chatAPIConfiguration.visitorInfo \(v.email)")
-                }
-                Chat.chatProvider?.sendOfflineForm(OfflineForm(visitorInfo: Chat.instance?.configuration.visitorInfo, departmentId: Chat.instance?.configuration.department, message: message)) { (outcome) in
-                    switch outcome {
-                    case .success(_):
-                        result(true)
-                        return;
-                    case .failure(_):
-                        result(false)
-                        return;
-                    default:
-                        result(false)
+                    Chat.chatProvider?.sendOfflineForm(OfflineForm(visitorInfo: chatAPIConfiguration.visitorInfo, departmentId: chatAPIConfiguration.department, message: message)) { (outcome) in
+                        switch outcome {
+                        case .success(_):
+                            result(true)
+                            return;
+                        case .failure(_):
+                            result(false)
+                            return;
+                        default:
+                            result(false)
+                        }
                     }
                 }
             } else {
@@ -247,27 +246,25 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
     
     func initialize(accountKey: String, appId: String?, department: String?, name: String, email: String?, phoneNumber: String?, tags: [String]?) throws {
         chatAPIConfiguration = ChatAPIConfiguration()
-        if chatAPIConfiguration != nil {
-            if(tags != nil){
-                chatAPIConfiguration!.tags = tags!
-            }
-            
-            if(department != nil) {
-                chatAPIConfiguration!.department = department
-            }
-            print("email \(email)")
-            chatAPIConfiguration!.visitorInfo = VisitorInfo(name: name, email: email ?? "", phoneNumber: phoneNumber ?? "")
-            Chat.instance?.configuration = chatAPIConfiguration!
-            
-            if(appId != nil) {
-                print(appId ?? "");
-                Chat.initialize(accountKey: accountKey, appId: appId, queue: .main)
-            } else {
-                Chat.initialize(accountKey: accountKey, queue: .main)
-            }
-            self.initObservers()
-            Chat.connectionProvider?.connect()
+        if(tags != nil){
+            chatAPIConfiguration!.tags = tags!
         }
+        
+        if(department != nil) {
+            chatAPIConfiguration!.department = department
+        }
+        print("email \(email)")
+        chatAPIConfiguration!.visitorInfo = VisitorInfo(name: name, email: email ?? "", phoneNumber: phoneNumber ?? "")
+        Chat.instance?.configuration = chatAPIConfiguration!
+        
+        if(appId != nil) {
+            print(appId ?? "");
+            Chat.initialize(accountKey: accountKey, appId: appId, queue: .main)
+        } else {
+            Chat.initialize(accountKey: accountKey, queue: .main)
+        }
+        self.initObservers()
+        Chat.connectionProvider?.connect()
     }
     
     func initObservers() -> Void {
