@@ -249,15 +249,15 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
         chatAPIConfiguration = ChatAPIConfiguration()
         if chatAPIConfiguration != nil {
             if(tags != nil){
-                chatAPIConfiguration.tags = tags!
+                chatAPIConfiguration!.tags = tags!
             }
             
             if(department != nil) {
-                chatAPIConfiguration.department = department
+                chatAPIConfiguration!.department = department
             }
             print("email \(email)")
-            chatAPIConfiguration.visitorInfo = VisitorInfo(name: name, email: email ?? "", phoneNumber: phoneNumber ?? "")
-            Chat.instance?.configuration = chatAPIConfiguration
+            chatAPIConfiguration!.visitorInfo = VisitorInfo(name: name, email: email ?? "", phoneNumber: phoneNumber ?? "")
+            Chat.instance?.configuration = chatAPIConfiguration!
             
             if(appId != nil) {
                 print(appId ?? "");
