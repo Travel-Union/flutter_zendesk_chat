@@ -7,6 +7,7 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
     var connectionToken: ObservationToken?
     var accountToken: ObservationToken?
     var chatToken: ObservationToken?
+    var chatAPIConfiguration: ChatAPIConfiguration?
     static var connectionStreamHandler: StreamHandler? = StreamHandler()
     static var accountStreamHandler: StreamHandler? = StreamHandler()
     static var chatItemStreamHandler: StreamHandler? = StreamHandler()
@@ -207,8 +208,8 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
                 let message: String = myArgs["message"] as? String
             {
                 print("message \(message)")
-                if let v = Chat.instance?.configuration.visitorInfo {
-                    print("Chat.instance?.configuration.visitorInfo \(v.email)")
+                if let v = chatAPIConfiguration?.visitorInfo {
+                    print("chatAPIConfiguration.visitorInfo \(v.email)")
                 }
                 Chat.chatProvider?.sendOfflineForm(OfflineForm(visitorInfo: Chat.instance?.configuration.visitorInfo, departmentId: Chat.instance?.configuration.department, message: message)) { (outcome) in
                     switch outcome {
@@ -245,7 +246,7 @@ public class SwiftFlutterZendeskChatPlugin: NSObject, FlutterPlugin {
     }
     
     func initialize(accountKey: String, appId: String?, department: String?, name: String, email: String?, phoneNumber: String?, tags: [String]?) throws {
-        let chatAPIConfiguration = ChatAPIConfiguration()
+        chatAPIConfiguration = ChatAPIConfiguration()
         if(tags != nil){
             chatAPIConfiguration.tags = tags!
         }
