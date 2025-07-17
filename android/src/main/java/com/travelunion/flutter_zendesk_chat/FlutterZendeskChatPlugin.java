@@ -76,7 +76,6 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
     chatItemsEventsChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(),
         "flutter_zendesk_chat/chat_items_events");
 
-    channel.setMethodCallHandler(plugin);
     connectionStatusEventsChannel.setStreamHandler(this.connectionStreamHandler);
     accountStatusEventsChannel.setStreamHandler(this.accountStreamHandler);
     agentEventsChannel.setStreamHandler(this.agentsStreamHandler);
