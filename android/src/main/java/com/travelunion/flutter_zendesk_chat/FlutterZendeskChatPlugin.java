@@ -23,7 +23,6 @@ import io.flutter.plugin.common.MethodCall;
 import io.flutter.plugin.common.MethodChannel;
 import io.flutter.plugin.common.MethodChannel.MethodCallHandler;
 import io.flutter.plugin.common.MethodChannel.Result;
-import io.flutter.plugin.common.PluginRegistry.Registrar;
 import zendesk.chat.Account;
 import zendesk.chat.Agent;
 import zendesk.chat.Chat;
@@ -76,48 +75,12 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
         "flutter_zendesk_chat/agent_events");
     chatItemsEventsChannel = new EventChannel(flutterPluginBinding.getBinaryMessenger(),
         "flutter_zendesk_chat/chat_items_events");
+
     connectionStatusEventsChannel.setStreamHandler(this.connectionStreamHandler);
     accountStatusEventsChannel.setStreamHandler(this.accountStreamHandler);
     agentEventsChannel.setStreamHandler(this.agentsStreamHandler);
     chatItemsEventsChannel.setStreamHandler(this.chatItemsStreamHandler);
     channel.setMethodCallHandler(this);
-  }
-
-  // This static function is optional and equivalent to onAttachedToEngine. It
-  // supports the old
-  // pre-Flutter-1.12 Android projects. You are encouraged to continue supporting
-  // plugin registration via this function while apps migrate to use the new
-  // Android APIs
-  // post-flutter-1.12 via https://flutter.dev/go/android-project-migration.
-  //
-  // It is encouraged to share logic between onAttachedToEngine and registerWith
-  // to keep
-  // them functionally equivalent. Only one of onAttachedToEngine or registerWith
-  // will be called
-  // depending on the user's project. onAttachedToEngine or registerWith must both
-  // be defined
-  // in the same class.
-  public static void registerWith(Registrar registrar) {
-    final MethodChannel channel = new MethodChannel(registrar.messenger(), "flutter_zendesk_chat");
-
-    final EventChannel connectionStatusEventsChannel = new EventChannel(registrar.messenger(),
-        "flutter_zendesk_chat/connection_status_events");
-    final EventChannel accountStatusEventsChannel = new EventChannel(registrar.messenger(),
-        "flutter_zendesk_chat/account_status_events");
-    final EventChannel agentEventsChannel = new EventChannel(registrar.messenger(),
-        "flutter_zendesk_chat/agent_events");
-    final EventChannel chatItemsEventsChannel = new EventChannel(registrar.messenger(),
-        "flutter_zendesk_chat/chat_items_events");
-
-    FlutterZendeskChatPlugin plugin = new FlutterZendeskChatPlugin();
-    plugin.activity = registrar.activity();
-
-    channel.setMethodCallHandler(plugin);
-
-    connectionStatusEventsChannel.setStreamHandler(plugin.connectionStreamHandler);
-    accountStatusEventsChannel.setStreamHandler(plugin.accountStreamHandler);
-    agentEventsChannel.setStreamHandler(plugin.agentsStreamHandler);
-    chatItemsEventsChannel.setStreamHandler(plugin.chatItemsStreamHandler);
   }
 
   @Override
