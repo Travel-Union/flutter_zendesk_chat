@@ -28,7 +28,7 @@ dependencies {
 
 android {
     compileSdkVersion 28
-
+    namespace 'com.travelunion.flutter_zendesk_chat'
     defaultConfig {
         minSdkVersion 16
     }
