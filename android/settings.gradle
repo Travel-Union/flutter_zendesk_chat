@@ -1,1 +1,29 @@
 rootProject.name = 'flutter_zendesk_chat'
+
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+        maven { url "https://zendesk.jfrog.io/zendesk/repo" }
+    }
+}
+
+plugins {
+    // Android Gradle Plugin versions for modules in this build
+    id 'com.android.library' version '7.3.0' apply false
+
+    // Only needed if some module is an application (example app)
+    id 'com.android.application' version '7.3.0' apply false
+
+    // Only needed if the app module uses Firebase / google-services
+    id 'com.google.gms.google-services' version '4.4.4' apply false
+}
