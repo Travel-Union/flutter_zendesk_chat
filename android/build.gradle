@@ -1,28 +1,27 @@
+plugins {
+  id 'com.android.library'
+}
+
 group 'com.travelunion.flutter_zendesk_chat'
 version '1.0'
 
-plugins {
-    id 'com.android.library'
-}
-
 android {
-    namespace "com.travelunion.flutter_zendesk_chat"
+  namespace "com.travelunion.flutter_zendesk_chat"
 
-    // Prefer Flutter-provided values when building as a Flutter plugin
-    compileSdkVersion flutter.compileSdkVersion
+  compileSdkVersion 34 // or flutter.compileSdkVersion if available in your setup
 
-    defaultConfig {
-        minSdkVersion flutter.minSdkVersion
-    }
+  defaultConfig {
+    minSdkVersion 21 // or flutter.minSdkVersion
+  }
 
-    lint {
-        disable 'InvalidPackage'
-    }
+  lint {
+    disable 'InvalidPackage'
+  }
 }
 
 dependencies {
-    implementation "com.zendesk:chat-providers:3.6.0"
+  implementation "com.zendesk:chat-providers:3.6.0"
 
-    // Keep ONLY if this plugin actually uses Firebase libraries directly.
-    implementation platform("com.google.firebase:firebase-bom:34.9.0")
+  implementation platform("com.google.firebase:firebase-bom:34.9.0")
+  implementation "com.google.firebase:firebase-messaging"
 }
