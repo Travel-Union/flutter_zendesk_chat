@@ -8,14 +8,14 @@ pluginManagement {
     }
 }
 
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+allprojects {
     repositories {
         google()
         mavenCentral()
-        maven { url "https://zendesk.jfrog.io/zendesk/repo" }
+        maven { url "https://zendesk.jfrog.io/zendesk/repo/" }
     }
 }
+
 
 plugins {
     // Android Gradle Plugin versions for modules in this build
