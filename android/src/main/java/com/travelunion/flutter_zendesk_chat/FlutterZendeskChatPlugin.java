@@ -259,60 +259,74 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
 
   private void bindChatListeners() {
     unbindChatListeners();
-    Log.d("TEST", "chatScope!");
-    chatScope = new ObservationScope();
-    Chat.INSTANCE.providers().chatProvider().observeChatState(chatScope, new Observer<ChatState>() {
-      @Override
-      public void update(final ChatState chatState) {
-        mainHandler.post(new Runnable() {
-          @Override
-          public void run() {
-            Log.d("TEST", "Processing START!");
-          }
-        });
-        // try {
-        //   final List<ChatAgent> agents = new ArrayList<>();
+    // chatScope = new ObservationScope();
+    // Chat.INSTANCE.providers().chatProvider().observeChatState(chatScope, new Observer<ChatState>() {
+    //   @Override
+    //   public void update(final ChatState chatState) {
+    //     mainHandler.post(new Runnable() {
+    //       @Override
+    //       public void run() {
+    //         Log.d("TEST", "Processing START!");
+    //       }
+    //     });
+    //     // try {
+    //     //   final List<ChatAgent> agents = new ArrayList<>();
 
-        //   for (Agent agent : chatState.getAgents()) {
-        //     agents.add(ChatAgent.fromAgent(agent));
-        //   }
+    //     //   for (Agent agent : chatState.getAgents()) {
+    //     //     agents.add(ChatAgent.fromAgent(agent));
+    //     //   }
 
-        //   Log.d("TEST", "Processing agents log: " + agents.size());
-        //   mainHandler.post(new Runnable() {
-        //     @Override
-        //     public void run() {
-        //       Log.d("TEST", "ChatAgent: " + agents.size());
-        //       agentsStreamHandler.success(toJson(agents));
-        //     }
-        //   });
-        // } catch (Exception e) {
+    //     //   Log.d("TEST", "Processing agents log: " + agents.size());
+    //     //   mainHandler.post(new Runnable() {
+    //     //     @Override
+    //     //     public void run() {
+    //     //       Log.d("TEST", "ChatAgent: " + agents.size());
+    //     //       agentsStreamHandler.success(toJson(agents));
+    //     //     }
+    //     //   });
+    //     // } catch (Exception e) {
 
-        // }
-        // try {
-        //   final List<ChatLogEvent> chatLogs = new ArrayList<>();
+    //     // }
+    //     // try {
+    //     //   final List<ChatLogEvent> chatLogs = new ArrayList<>();
 
-        //   for (ChatLog chatLog : chatState.getChatLogs()) {
-        //     chatLogs.add(ChatLogEvent.fromChatLog(chatLog));
-        //   }
-        //   Log.d("TEST", "Processing chat log: " + chatLogs.size());
-        //   mainHandler.post(new Runnable() {
-        //     @Override
-        //     public void run() {
-        //       Log.d("TEST", "Processing chat log: " + chatLogs.size());
-        //       chatItemsStreamHandler.success(toJson(chatLogs));
-        //     }
-        //   });
-        // } catch (Exception e) {
+    //     //   for (ChatLog chatLog : chatState.getChatLogs()) {
+    //     //     chatLogs.add(ChatLogEvent.fromChatLog(chatLog));
+    //     //   }
+    //     //   Log.d("TEST", "Processing chat log: " + chatLogs.size());
+    //     //   mainHandler.post(new Runnable() {
+    //     //     @Override
+    //     //     public void run() {
+    //     //       Log.d("TEST", "Processing chat log: " + chatLogs.size());
+    //     //       chatItemsStreamHandler.success(toJson(chatLogs));
+    //     //     }
+    //     //   });
+    //     // } catch (Exception e) {
 
-        // }
-      }
-    });
+    //     // }
+    //   }
+    // });
     Log.d("TEST", "connectionScope!");
     connectionScope = new ObservationScope();
     Chat.INSTANCE.providers().connectionProvider().observeConnectionStatus(connectionScope,
         new Observer<ConnectionStatus>() {
           @Override
           public void update(final ConnectionStatus status) {
+            if (status == ConnectionStatus.CONNECTED) {
+              Log.d("TEST", "chatScope!");
+              chatScope = new ObservationScope();
+              Chat.INSTANCE.providers().chatProvider().observeChatState(chatScope, new Observer<ChatState>() {
+                @Override
+                public void update(final ChatState chatState) {
+                  mainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                      Log.d("TEST", "Processing START!");
+                    }
+                  });
+                }
+              });
+            }
             mainHandler.post(new Runnable() {
               @Override
               public void run() {
