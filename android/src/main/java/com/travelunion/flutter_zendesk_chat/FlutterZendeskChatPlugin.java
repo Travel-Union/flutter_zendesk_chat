@@ -288,6 +288,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
           agents.add(ChatAgent.fromAgent(agent));
         }
 
+        Log.d("TEST", "Processing agents log: " + agents.size());
         mainHandler.post(new Runnable() {
           @Override
           public void run() {
