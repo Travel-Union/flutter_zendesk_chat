@@ -336,8 +336,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
   }
 
   private String toJson(Object object) {
-    return GSON.toJson(chatLogs)
-        .toJson(object);
+    return GSON.toJson(object);
   }
 
   private ChatRating toChatLogRating(String rating) {
