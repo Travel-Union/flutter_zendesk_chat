@@ -277,6 +277,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
       }
     });
 
+    private static final String TAG = "ChatObserver";
     chatScope = new ObservationScope();
 
     Chat.INSTANCE.providers()
