@@ -315,6 +315,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
         mainHandler.post(new Runnable() {
           @Override
           public void run() {
+            Log.d("TEST", "Processing chat log: " + chatLogs.size());
             chatItemsStreamHandler.success(toJson(chatLogs));
           }
         });
