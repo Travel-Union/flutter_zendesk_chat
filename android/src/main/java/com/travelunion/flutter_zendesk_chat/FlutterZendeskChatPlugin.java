@@ -277,66 +277,37 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
       }
     });
 
-    private static final String TAG = "ChatObserver";
     chatScope = new ObservationScope();
+    Chat.INSTANCE.providers().chatProvider().observeChatState(chatScope, new Observer<ChatState>() {
+      @Override
+      public void update(ChatState chatState) {
+        final List<ChatAgent> agents = new ArrayList<>();
 
-    Chat.INSTANCE.providers()
-        .chatProvider()
-        .observeChatState(chatScope, new Observer<ChatState>() {
+        for (Agent agent : chatState.agents) {
+          agents.add(ChatAgent.fromAgent(agent));
+        }
 
-            @Override
-            public void update(ChatState chatState) {
-                Log.d(TAG, "update() called");
-
-                if (chatState == null) {
-                    Log.e(TAG, "ChatState is null");
-                    return;
-                }
-
-                // ---------- Agents ----------
-                Log.d(TAG, "Agents count: " +
-                        (chatState.agents != null ? chatState.agents.size() : "null"));
-
-                final List<ChatAgent> agents = new ArrayList<>();
-
-                if (chatState.agents != null) {
-                    for (Agent agent : chatState.agents) {
-                        Log.d(TAG, "Processing agent: " + agent);
-                        agents.add(ChatAgent.fromAgent(agent));
-                    }
-                }
-
-                mainHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d(TAG, "Posting agents to agentsStreamHandler");
-                        agentsStreamHandler.success(toJson(agents));
-                    }
-                });
-
-                // ---------- Chat Logs ----------
-                Log.d(TAG, "Chat logs count: " +
-                        (chatState.logs != null ? chatState.logs.size() : "null"));
-
-                final List<ChatLogEvent> chatLogs = new ArrayList<>();
-
-                if (chatState.logs != null) {
-                    for (ChatLog chatLog : chatState.logs) {
-                        Log.d(TAG, "Processing chat log: " + chatLog);
-                        chatLogs.add(ChatLogEvent.fromChatLog(chatLog));
-                    }
-                }
-
-                mainHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        Log.d(TAG, "Posting chat logs to chatItemsStreamHandler");
-                        chatItemsStreamHandler.success(toJson(chatLogs));
-                    }
-                });
-            }
+        mainHandler.post(new Runnable() {
+          @Override
+          public void run() {
+            agentsStreamHandler.success(toJson(agents));
+          }
         });
 
+        final List<ChatLogEvent> chatLogs = new ArrayList<>();
+
+        for (ChatLog chatLog : chatState.logs) {
+          chatLogs.add(ChatLogEvent.fromChatLog(chatLog));
+        }
+
+        mainHandler.post(new Runnable() {
+          @Override
+          public void run() {
+            chatItemsStreamHandler.success(toJson(chatLogs));
+          }
+        });
+      }
+    });
   }
 
   private void unbindChatListeners() {
