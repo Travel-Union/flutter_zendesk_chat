@@ -41,10 +41,6 @@ import com.google.gson.GsonBuilder;
 import android.util.Log;
 import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES;
 
-
-
-import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES;
-
 /** FlutterZendeskChatPlugin */
 public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
   /// The MethodChannel that will the communication between Flutter and native
@@ -64,6 +60,10 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
   private ObservationScope connectionScope = null;
   private ObservationScope accountScope = null;
   private ObservationScope chatScope = null;
+  private static final Gson GSON = new GsonBuilder()
+    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+    .serializeNulls() // optional: include null fields in JSON
+    .create();
   private FlutterZendeskChatPlugin.EventChannelStreamHandler connectionStreamHandler = new FlutterZendeskChatPlugin.EventChannelStreamHandler();
   private FlutterZendeskChatPlugin.EventChannelStreamHandler accountStreamHandler = new FlutterZendeskChatPlugin.EventChannelStreamHandler();
   private FlutterZendeskChatPlugin.EventChannelStreamHandler agentsStreamHandler = new FlutterZendeskChatPlugin.EventChannelStreamHandler();
@@ -336,11 +336,8 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
   }
 
   private String toJson(Object object) {
-    return new GsonBuilder()
-        .setFieldNamingPolicy(LOWER_CASE_WITH_UNDERSCORES)
-        .create()
-        .toJson(object)
-        .replaceAll("\\$(string|int|bool)\":", "\":");
+    return GSON.toJson(chatLogs)
+        .toJson(object);
   }
 
   private ChatRating toChatLogRating(String rating) {
