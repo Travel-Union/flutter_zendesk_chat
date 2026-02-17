@@ -23,7 +23,4 @@ plugins {
 
     // Only needed if some module is an application (example app)
     id 'com.android.application' version '7.3.0' apply false
-
-    // Only needed if the app module uses Firebase / google-services
-    id 'com.google.gms.google-services' version '4.4.4' apply false
 }

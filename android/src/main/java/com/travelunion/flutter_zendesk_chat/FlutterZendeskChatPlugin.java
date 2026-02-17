@@ -37,10 +37,9 @@ import zendesk.chat.OfflineForm;
 import zendesk.chat.ProfileProvider;
 import zendesk.chat.PushNotificationsProvider;
 import zendesk.chat.VisitorInfo;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.messaging.FirebaseMessaging;
-import zendesk.messaging.android.push.PushNotifications;
+import com.google.gson.GsonBuilder;
+import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES;
+
 
 
 import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES;
@@ -95,11 +94,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
         final String accountKey = call.argument("accountKey");
         final String appId = call.argument("appId");
         final String pushToken = call.argument("pushToken");
-        try {
-          PushNotifications.updatePushNotificationToken(pushToken);
-        } catch (Exception e) {
-        }
-        
+
         try {
           if (appId == null) {
             Chat.INSTANCE.init(activity, accountKey);
