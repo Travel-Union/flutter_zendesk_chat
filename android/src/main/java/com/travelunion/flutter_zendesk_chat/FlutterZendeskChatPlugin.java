@@ -259,35 +259,6 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
 
   private void bindChatListeners() {
     unbindChatListeners();
-    Log.d("TEST", "connectionScope!");
-    connectionScope = new ObservationScope();
-    Chat.INSTANCE.providers().connectionProvider().observeConnectionStatus(connectionScope,
-        new Observer<ConnectionStatus>() {
-          @Override
-          public void update(final ConnectionStatus status) {
-            mainHandler.post(new Runnable() {
-              @Override
-              public void run() {
-                Log.d("TEST", "Processing StatusSSS: " + status.name());
-                connectionStreamHandler.success(status.name());
-              }
-            });
-          }
-        });
-    Log.d("TEST", "accountScope!");
-    accountScope = new ObservationScope();
-    Chat.INSTANCE.providers().accountProvider().observeAccount(accountScope, new Observer<Account>() {
-      @Override
-      public void update(final Account account) {
-        mainHandler.post(new Runnable() {
-          @Override
-          public void run() {
-            Log.d("TEST", "AccountStreamHandler: " + account.getStatus().name());
-            accountStreamHandler.success(account.getStatus().name());
-          }
-        });
-      }
-    });
     Log.d("TEST", "chatScope!");
     chatScope = new ObservationScope();
     Chat.INSTANCE.providers().chatProvider().observeChatState(chatScope, new Observer<ChatState>() {
@@ -334,6 +305,35 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
         } catch (Exception e) {
 
         }
+      }
+    });
+    Log.d("TEST", "connectionScope!");
+    connectionScope = new ObservationScope();
+    Chat.INSTANCE.providers().connectionProvider().observeConnectionStatus(connectionScope,
+        new Observer<ConnectionStatus>() {
+          @Override
+          public void update(final ConnectionStatus status) {
+            mainHandler.post(new Runnable() {
+              @Override
+              public void run() {
+                Log.d("TEST", "Processing StatusSSS: " + status.name());
+                connectionStreamHandler.success(status.name());
+              }
+            });
+          }
+        });
+    Log.d("TEST", "accountScope!");
+    accountScope = new ObservationScope();
+    Chat.INSTANCE.providers().accountProvider().observeAccount(accountScope, new Observer<Account>() {
+      @Override
+      public void update(final Account account) {
+        mainHandler.post(new Runnable() {
+          @Override
+          public void run() {
+            Log.d("TEST", "AccountStreamHandler: " + account.getStatus().name());
+            accountStreamHandler.success(account.getStatus().name());
+          }
+        });
       }
     });
   }
