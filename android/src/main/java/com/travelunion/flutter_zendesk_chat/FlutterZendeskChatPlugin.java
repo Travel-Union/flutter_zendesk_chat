@@ -38,6 +38,7 @@ import zendesk.chat.ProfileProvider;
 import zendesk.chat.PushNotificationsProvider;
 import zendesk.chat.VisitorInfo;
 import com.google.gson.GsonBuilder;
+import android.util.Log;
 import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES;
 
 
@@ -283,7 +284,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
       public void update(ChatState chatState) {
         final List<ChatAgent> agents = new ArrayList<>();
 
-        for (Agent agent : chatState.agents) {
+        for (Agent agent : chatState.getAgents()) {
           agents.add(ChatAgent.fromAgent(agent));
         }
 
@@ -296,10 +297,10 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
 
         final List<ChatLogEvent> chatLogs = new ArrayList<>();
 
-        for (ChatLog chatLog : chatState.logs) {
+        for (ChatLog chatLog : chatState.getChatLogs()) {
           chatLogs.add(ChatLogEvent.fromChatLog(chatLog));
         }
-
+        Log.d("TEST", "Processing chat log: " + chatLog.size());
         mainHandler.post(new Runnable() {
           @Override
           public void run() {
