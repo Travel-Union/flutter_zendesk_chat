@@ -159,6 +159,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
           String message = call.argument("message");
           Log.d("TEST", "Message " + message);
           Chat.INSTANCE.providers().chatProvider().sendMessage(message);
+          Chat.INSTANCE.providers().chatProvider().requestChat();
           result.success(null);
         }
         break;
