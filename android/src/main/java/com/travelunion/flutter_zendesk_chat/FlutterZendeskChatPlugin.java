@@ -130,11 +130,11 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
           }
 
           try {
-              Log.d(TAG, "bindChatListeners() started");
+              Log.d("TAG", "bindChatListeners() started");
               bindChatListeners();
-              Log.d(TAG, "bindChatListeners() completed successfully");
+              Log.d("TAG", "bindChatListeners() completed successfully");
           } catch (Exception e) {
-              Log.e(TAG, "Error while calling bindChatListeners()", e);
+              Log.e("TAG", "Error while calling bindChatListeners()", e);
           }
 
           Chat.INSTANCE.providers().connectionProvider().connect();
