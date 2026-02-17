@@ -129,7 +129,13 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
             profileProvider.addVisitorTags(tags, null);
           }
 
-          bindChatListeners();
+          try {
+              Log.d(TAG, "bindChatListeners() started");
+              bindChatListeners();
+              Log.d(TAG, "bindChatListeners() completed successfully");
+          } catch (Exception e) {
+              Log.e(TAG, "Error while calling bindChatListeners()", e);
+          }
 
           Chat.INSTANCE.providers().connectionProvider().connect();
 
@@ -149,6 +155,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
           result.error("CHAT_NOT_STARTED", null, null);
         } else {
           String message = call.argument("message");
+          Log.d("TEST", "Message " + message);
           Chat.INSTANCE.providers().chatProvider().sendMessage(message);
           result.success(null);
         }
@@ -250,7 +257,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
 
   private void bindChatListeners() {
     unbindChatListeners();
-
+    Log.d("TEST", "connectionScope!");
     connectionScope = new ObservationScope();
     Chat.INSTANCE.providers().connectionProvider().observeConnectionStatus(connectionScope,
         new Observer<ConnectionStatus>() {
@@ -264,7 +271,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
             });
           }
         });
-
+    Log.d("TEST", "accountScope!");
     accountScope = new ObservationScope();
     Chat.INSTANCE.providers().accountProvider().observeAccount(accountScope, new Observer<Account>() {
       @Override
@@ -277,7 +284,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
         });
       }
     });
-
+    Log.d("TEST", "chatScope!");
     chatScope = new ObservationScope();
     Chat.INSTANCE.providers().chatProvider().observeChatState(chatScope, new Observer<ChatState>() {
       @Override
