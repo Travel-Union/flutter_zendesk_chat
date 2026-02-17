@@ -282,6 +282,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
     Chat.INSTANCE.providers().chatProvider().observeChatState(chatScope, new Observer<ChatState>() {
       @Override
       public void update(ChatState chatState) {
+        Log.d("TEST", "Processing START!");
         final List<ChatAgent> agents = new ArrayList<>();
 
         for (Agent agent : chatState.getAgents()) {
