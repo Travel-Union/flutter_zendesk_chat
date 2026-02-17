@@ -357,10 +357,10 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
       connectionScope.cancel();
       connectionScope = null;
     }
-    if (chatScope != null && !chatScope.isCancelled()) {
-      chatScope.cancel();
-      chatScope = null;
-    }
+    // if (chatScope != null && !chatScope.isCancelled()) {
+    //   chatScope.cancel();
+    //   chatScope = null;
+    // }
     if (accountScope != null && !accountScope.isCancelled()) {
       accountScope.cancel();
       accountScope = null;
