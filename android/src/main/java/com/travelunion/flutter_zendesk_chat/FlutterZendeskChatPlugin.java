@@ -282,6 +282,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
         mainHandler.post(new Runnable() {
           @Override
           public void run() {
+            Log.d("TEST", "AccountStreamHandler: " + account.getStatus().name());
             accountStreamHandler.success(account.getStatus().name());
           }
         });
@@ -293,33 +294,41 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
       @Override
       public void update(ChatState chatState) {
         Log.d("TEST", "Processing START!");
-        final List<ChatAgent> agents = new ArrayList<>();
+        try {
+          final List<ChatAgent> agents = new ArrayList<>();
 
-        for (Agent agent : chatState.getAgents()) {
-          agents.add(ChatAgent.fromAgent(agent));
-        }
-
-        Log.d("TEST", "Processing agents log: " + agents.size());
-        mainHandler.post(new Runnable() {
-          @Override
-          public void run() {
-            agentsStreamHandler.success(toJson(agents));
+          for (Agent agent : chatState.getAgents()) {
+            agents.add(ChatAgent.fromAgent(agent));
           }
-        });
 
-        final List<ChatLogEvent> chatLogs = new ArrayList<>();
+          Log.d("TEST", "Processing agents log: " + agents.size());
+          mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+              Log.d("TEST", "ChatAgent: " + agents.size());
+              agentsStreamHandler.success(toJson(agents));
+            }
+          });
+        } catch (Exception e) {
 
-        for (ChatLog chatLog : chatState.getChatLogs()) {
-          chatLogs.add(ChatLogEvent.fromChatLog(chatLog));
         }
-        Log.d("TEST", "Processing chat log: " + chatLogs.size());
-        mainHandler.post(new Runnable() {
-          @Override
-          public void run() {
-            Log.d("TEST", "Processing chat log: " + chatLogs.size());
-            chatItemsStreamHandler.success(toJson(chatLogs));
+        try {
+          final List<ChatLogEvent> chatLogs = new ArrayList<>();
+
+          for (ChatLog chatLog : chatState.getChatLogs()) {
+            chatLogs.add(ChatLogEvent.fromChatLog(chatLog));
           }
-        });
+          Log.d("TEST", "Processing chat log: " + chatLogs.size());
+          mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+              Log.d("TEST", "Processing chat log: " + chatLogs.size());
+              chatItemsStreamHandler.success(toJson(chatLogs));
+            }
+          });
+        } catch (Exception e) {
+
+        }
       }
     });
   }
