@@ -37,9 +37,11 @@ import zendesk.chat.OfflineForm;
 import zendesk.chat.ProfileProvider;
 import zendesk.chat.PushNotificationsProvider;
 import zendesk.chat.VisitorInfo;
-import com.google.gson.GsonBuilder;
 import android.util.Log;
-import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.FieldNamingPolicy;
+
 
 /** FlutterZendeskChatPlugin */
 public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
