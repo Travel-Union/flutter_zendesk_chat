@@ -20,6 +20,6 @@ android {
 }
 
 dependencies {
-  implementation group: 'com.zendesk', name: 'chat-providers', version: '3.3.0'
+  implementation group: 'com.zendesk', name: 'chat-providers', version: '3.3.3'
   implementation "com.google.code.gson:gson:2.10.1"
 }
