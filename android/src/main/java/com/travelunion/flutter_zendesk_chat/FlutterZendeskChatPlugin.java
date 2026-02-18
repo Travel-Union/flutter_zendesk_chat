@@ -160,7 +160,58 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
           Log.d("TEST", "Message " + message);
           Chat.INSTANCE.providers().chatProvider().sendMessage(message);
           Chat.INSTANCE.providers().chatProvider().requestChat();
-          result.success(null);
+          ChatState chatState = Chat.INSTANCE.providers().chatProvider().getChatState();
+          if (chatState == null) {
+            Log.d("TEST", "getChatState() returned null (no cached state yet)");
+            return;
+          }
+          try {
+            final List<ChatAgent> agents = new ArrayList<>();
+
+            List<Agent> stateAgents = chatState.getAgents();
+            if (stateAgents != null) {
+              for (Agent agent : stateAgents) {
+                if (agent != null) {
+                  agents.add(ChatAgent.fromAgent(agent));
+                }
+              }
+            }
+
+            Log.d("TEST", "Processing agents log: " + agents.size());
+            mainHandler.post(new Runnable() {
+              @Override
+              public void run() {
+                Log.d("TEST", "ChatAgent: " + agents.size());
+                agentsStreamHandler.success(toJson(agents));
+              }
+            });
+          } catch (Exception e) {
+            Log.e("TEST", "Error while processing agents from ChatState snapshot", e);
+          }
+
+          try {
+            final List<ChatLogEvent> chatLogs = new ArrayList<>();
+
+            List<ChatLog> stateLogs = chatState.getChatLogs();
+            if (stateLogs != null) {
+              for (ChatLog chatLog : stateLogs) {
+                if (chatLog != null) {
+                  chatLogs.add(ChatLogEvent.fromChatLog(chatLog));
+                }
+              }
+            }
+
+            Log.d("TEST", "Processing chat log: " + chatLogs.size());
+            mainHandler.post(new Runnable() {
+              @Override
+              public void run() {
+                Log.d("TEST", "Processing chat log: " + chatLogs.size());
+                chatItemsStreamHandler.success(toJson(chatLogs));
+              }
+            });
+          } catch (Exception e) {
+            Log.e("TEST", "Error while processing chat logs from ChatState snapshot", e);
+          }
         }
         break;
       case "resendMessage":
