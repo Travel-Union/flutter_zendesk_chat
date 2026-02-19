@@ -258,84 +258,86 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
   }
 
   private void bindChatListeners() {
-    unbindChatListeners();
-    chatScope = new ObservationScope();
-    Chat.INSTANCE.providers().chatProvider().observeChatState(chatScope, new Observer<ChatState>() {
-      @Override
-      public void update(ChatState chatState) {
-        Log.d("TEST", "Processing START!");
-        mainHandler.post(new Runnable() {
-          @Override
-          public void run() {
-            Log.d("TEST", "Processing START!");
-          }
-        });
-        // try {
-        //   final List<ChatAgent> agents = new ArrayList<>();
+    if (chatScope == null) {
+      unbindChatListeners();
+      chatScope = new ObservationScope();
+      Chat.INSTANCE.providers().chatProvider().observeChatState(chatScope, new Observer<ChatState>() {
+        @Override
+        public void update(ChatState chatState) {
+          Log.d("TEST", "Processing START!");
+          mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+              Log.d("TEST", "Processing START!");
+            }
+          });
+          // try {
+          //   final List<ChatAgent> agents = new ArrayList<>();
 
-        //   for (Agent agent : chatState.getAgents()) {
-        //     agents.add(ChatAgent.fromAgent(agent));
-        //   }
+          //   for (Agent agent : chatState.getAgents()) {
+          //     agents.add(ChatAgent.fromAgent(agent));
+          //   }
 
-        //   Log.d("TEST", "Processing agents log: " + agents.size());
-        //   mainHandler.post(new Runnable() {
-        //     @Override
-        //     public void run() {
-        //       Log.d("TEST", "ChatAgent: " + agents.size());
-        //       agentsStreamHandler.success(toJson(agents));
-        //     }
-        //   });
-        // } catch (Exception e) {
+          //   Log.d("TEST", "Processing agents log: " + agents.size());
+          //   mainHandler.post(new Runnable() {
+          //     @Override
+          //     public void run() {
+          //       Log.d("TEST", "ChatAgent: " + agents.size());
+          //       agentsStreamHandler.success(toJson(agents));
+          //     }
+          //   });
+          // } catch (Exception e) {
 
-        // }
-        // try {
-        //   final List<ChatLogEvent> chatLogs = new ArrayList<>();
+          // }
+          // try {
+          //   final List<ChatLogEvent> chatLogs = new ArrayList<>();
 
-        //   for (ChatLog chatLog : chatState.getChatLogs()) {
-        //     chatLogs.add(ChatLogEvent.fromChatLog(chatLog));
-        //   }
-        //   Log.d("TEST", "Processing chat log: " + chatLogs.size());
-        //   mainHandler.post(new Runnable() {
-        //     @Override
-        //     public void run() {
-        //       Log.d("TEST", "Processing chat log: " + chatLogs.size());
-        //       chatItemsStreamHandler.success(toJson(chatLogs));
-        //     }
-        //   });
-        // } catch (Exception e) {
+          //   for (ChatLog chatLog : chatState.getChatLogs()) {
+          //     chatLogs.add(ChatLogEvent.fromChatLog(chatLog));
+          //   }
+          //   Log.d("TEST", "Processing chat log: " + chatLogs.size());
+          //   mainHandler.post(new Runnable() {
+          //     @Override
+          //     public void run() {
+          //       Log.d("TEST", "Processing chat log: " + chatLogs.size());
+          //       chatItemsStreamHandler.success(toJson(chatLogs));
+          //     }
+          //   });
+          // } catch (Exception e) {
 
-        // }
-      }
-    });
-    Log.d("TEST", "connectionScope!");
-    connectionScope = new ObservationScope();
-    Chat.INSTANCE.providers().connectionProvider().observeConnectionStatus(connectionScope,
-        new Observer<ConnectionStatus>() {
-          @Override
-          public void update(final ConnectionStatus status) {
-            mainHandler.post(new Runnable() {
-              @Override
-              public void run() {
-                Log.d("TEST", "Processing StatusSSS: " + status.name());
-                connectionStreamHandler.success(status.name());
-              }
-            });
-          }
-        });
-    Log.d("TEST", "accountScope!");
-    accountScope = new ObservationScope();
-    Chat.INSTANCE.providers().accountProvider().observeAccount(accountScope, new Observer<Account>() {
-      @Override
-      public void update(final Account account) {
-        mainHandler.post(new Runnable() {
-          @Override
-          public void run() {
-            Log.d("TEST", "AccountStreamHandler: " + account.getStatus().name());
-            accountStreamHandler.success(account.getStatus().name());
-          }
-        });
-      }
-    });
+          // }
+        }
+      });
+      Log.d("TEST", "connectionScope!");
+      connectionScope = new ObservationScope();
+      Chat.INSTANCE.providers().connectionProvider().observeConnectionStatus(connectionScope,
+          new Observer<ConnectionStatus>() {
+            @Override
+            public void update(final ConnectionStatus status) {
+              mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                  Log.d("TEST", "Processing StatusSSS: " + status.name());
+                  connectionStreamHandler.success(status.name());
+                }
+              });
+            }
+          });
+      Log.d("TEST", "accountScope!");
+      accountScope = new ObservationScope();
+      Chat.INSTANCE.providers().accountProvider().observeAccount(accountScope, new Observer<Account>() {
+        @Override
+        public void update(final Account account) {
+          mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+              Log.d("TEST", "AccountStreamHandler: " + account.getStatus().name());
+              accountStreamHandler.success(account.getStatus().name());
+            }
+          });
+        }
+      });
+    }
   }
 
   private void unbindChatListeners() {
