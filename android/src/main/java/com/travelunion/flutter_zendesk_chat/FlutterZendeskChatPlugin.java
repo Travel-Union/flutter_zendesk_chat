@@ -158,6 +158,18 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
         } else {
           String message = call.argument("message");
           Log.d("TEST", "Message " + message);
+          Chat.INSTANCE.providers().chatProvider().observeChatState(new ObservationScope(), new Observer<ChatState>() {
+            @Override
+            public void update(ChatState chatState) {
+              Log.d("TEST", "Processing START!");
+              mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                  Log.d("TEST", "Processing START!");
+                }
+              });
+            }
+          });
           Chat.INSTANCE.providers().chatProvider().sendMessage(message);
           result.success(null);
         }
