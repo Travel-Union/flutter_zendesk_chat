@@ -42,9 +42,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.FieldNamingPolicy;
 import com.zendesk.logger.Logger;
-import zendesk.chat.ChatEngine;
-import zendesk.classic.messaging.MessagingActivity;
-import androidx.appcompat.app.AppCompatActivity;
 
 
 /** FlutterZendeskChatPlugin */
@@ -154,8 +151,6 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
               }
             }
           });
-
-          MessagingActivity.builder().withEngines(ChatEngine.engine()).show(activity);
 
           result.success(null);
         } catch (Exception e) {
