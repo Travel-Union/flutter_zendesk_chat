@@ -154,7 +154,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
             }
           });
 
-          MessagingActivity.builder().withEngines(ChatEngine.engine()).show(MainActivity.this);
+          MessagingActivity.builder().withEngines(ChatEngine.engine()).show(activity);
 
           // result.success(null);
         } catch (Exception e) {
