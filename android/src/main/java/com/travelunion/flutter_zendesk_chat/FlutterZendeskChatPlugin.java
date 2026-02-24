@@ -132,15 +132,6 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
           if (tags != null && tags.size() > 0) {
             profileProvider.addVisitorTags(tags, null);
           }
-          chatProvider.observeChatState(new ObservationScope(), new Observer<ChatState>() {
-            @Override
-            public void update(ChatState chatState) {
-              Log.d("TEST", "Processing START!");
-              if (chatState != null && !chatState.getChatLogs().isEmpty()) {
-                Log.d("TEst","" + chatState.getChatLogs().size());
-              }
-            }
-          });
           try {
               Log.d("TAG", "bindChatListeners() started");
               bindChatListeners();
@@ -150,6 +141,16 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
           }
 
           Chat.INSTANCE.providers().connectionProvider().connect();
+
+          chatProvider.observeChatState(new ObservationScope(), new Observer<ChatState>() {
+            @Override
+            public void update(ChatState chatState) {
+              Log.d("TEST", "Processing START!");
+              if (chatState != null && !chatState.getChatLogs().isEmpty()) {
+                Log.d("TEst","" + chatState.getChatLogs().size());
+              }
+            }
+          });
 
           result.success(null);
         } catch (Exception e) {
@@ -270,17 +271,17 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
   private void bindChatListeners() {
     if (chatScope == null) {
       unbindChatListeners();
-      chatScope = new ObservationScope();
-      Chat.INSTANCE.providers().chatProvider().observeChatState(chatScope, new Observer<ChatState>() {
-        @Override
-        public void update(ChatState chatState) {
-          Log.d("TEST", "Processing START!");
-          mainHandler.post(new Runnable() {
-            @Override
-            public void run() {
-              Log.d("TEST", "Processing START!");
-            }
-          });
+      // chatScope = new ObservationScope();
+      // Chat.INSTANCE.providers().chatProvider().observeChatState(chatScope, new Observer<ChatState>() {
+      //   @Override
+      //   public void update(ChatState chatState) {
+      //     Log.d("TEST", "Processing START!");
+      //     mainHandler.post(new Runnable() {
+      //       @Override
+      //       public void run() {
+      //         Log.d("TEST", "Processing START!");
+      //       }
+      //     });
           // try {
           //   final List<ChatAgent> agents = new ArrayList<>();
 
@@ -316,8 +317,8 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
           // } catch (Exception e) {
 
           // }
-        }
-      });
+      //   }
+      // });
       Log.d("TEST", "connectionScope!");
       connectionScope = new ObservationScope();
       Chat.INSTANCE.providers().connectionProvider().observeConnectionStatus(connectionScope,
