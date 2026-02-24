@@ -41,7 +41,6 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.FieldNamingPolicy;
-import com.zendesk.logger.Logger;
 
 
 /** FlutterZendeskChatPlugin */
@@ -101,12 +100,11 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
 
         try {
           Logger.setLoggable(true);
-          Chat.INSTANCE.init(activity, accountKey);
-//          if (appId == null) {
-//
-//          } else {
-//            Chat.INSTANCE.init(activity, accountKey, appId);
-//          }
+          if (appId == null) {
+            Chat.INSTANCE.init(activity, accountKey);
+          } else {
+            Chat.INSTANCE.init(activity, accountKey, appId);
+          }
 
           ProfileProvider profileProvider = Chat.INSTANCE.providers().profileProvider();
           ChatProvider chatProvider = Chat.INSTANCE.providers().chatProvider();
@@ -133,7 +131,15 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
           if (tags != null && tags.size() > 0) {
             profileProvider.addVisitorTags(tags, null);
           }
-
+          chatProvider.observeChatState(new ObservationScope(), new Observer<ChatState>() {
+            @Override
+            public void update(ChatState chatState) {
+              Log.d("TEST", "Processing START!");
+              if (chatState != null && !chatState.getChatLogs().isEmpty()) {
+                Log.d("TEst","" + chatState.getChatLogs().size());
+              }
+            }
+          });
           try {
               Log.d("TAG", "bindChatListeners() started");
               bindChatListeners();
@@ -161,15 +167,6 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
         } else {
           String message = call.argument("message");
           Log.d("TEST", "Message " + message);
-          Chat.INSTANCE.providers().chatProvider().observeChatState(new ObservationScope(), new Observer<ChatState>() {
-            @Override
-            public void update(ChatState chatState) {
-              Log.d("TEST", "Processing START!");
-              if (chatState != null && !chatState.getChatLogs().isEmpty()) {
-                Log.d("TEst","" + chatState.getChatLogs().size());
-              }
-            }
-          });
           Chat.INSTANCE.providers().chatProvider().sendMessage(message);
           result.success(null);
         }
@@ -350,6 +347,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
         }
       });
     }
+
   }
 
   private void unbindChatListeners() {
