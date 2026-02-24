@@ -1,16 +1,15 @@
-plugins {
-    id 'com.android.library'
-}
-
 buildscript {
   repositories {
     google()
-    jcenter()
+    jcenter()   // consider removing, see note below
   }
-
   dependencies {
     classpath 'com.android.tools.build:gradle:8.2.1'
   }
+}
+
+plugins {
+  id 'com.android.library'
 }
 
 android {
