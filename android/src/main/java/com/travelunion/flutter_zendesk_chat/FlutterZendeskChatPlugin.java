@@ -41,6 +41,7 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.FieldNamingPolicy;
+import com.zendesk.logger.Logger;
 
 
 /** FlutterZendeskChatPlugin */
@@ -99,11 +100,13 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
         final String pushToken = call.argument("pushToken");
 
         try {
-          if (appId == null) {
-            Chat.INSTANCE.init(activity, accountKey);
-          } else {
-            Chat.INSTANCE.init(activity, accountKey, appId);
-          }
+          Logger.setLoggable(true);
+          Chat.INSTANCE.init(activity, accountKey);
+//          if (appId == null) {
+//
+//          } else {
+//            Chat.INSTANCE.init(activity, accountKey, appId);
+//          }
 
           ProfileProvider profileProvider = Chat.INSTANCE.providers().profileProvider();
           ChatProvider chatProvider = Chat.INSTANCE.providers().chatProvider();
@@ -162,12 +165,9 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
             @Override
             public void update(ChatState chatState) {
               Log.d("TEST", "Processing START!");
-              mainHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                  Log.d("TEST", "Processing START!");
-                }
-              });
+              if (chatState != null && !chatState.getChatLogs().isEmpty()) {
+                Log.d("TEst","" + chatState.getChatLogs().size());
+              }
             }
           });
           Chat.INSTANCE.providers().chatProvider().sendMessage(message);
