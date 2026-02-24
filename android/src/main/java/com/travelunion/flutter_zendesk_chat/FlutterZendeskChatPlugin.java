@@ -42,7 +42,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.FieldNamingPolicy;
 import com.zendesk.logger.Logger;
-
+import androidx.appcompat.app.AppCompatActivity;
+import zendesk.chat.ChatEngine;
+import zendesk.classic.messaging.MessagingActivity;
 
 /** FlutterZendeskChatPlugin */
 public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -152,7 +154,9 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
             }
           });
 
-          result.success(null);
+          MessagingActivity.builder().withEngines(ChatEngine.engine()).show(MainActivity.this);
+
+          // result.success(null);
         } catch (Exception e) {
           result.error("UNABLE_TO_INITIALIZE_CHAT_API", e.getMessage(), e);
           break;
