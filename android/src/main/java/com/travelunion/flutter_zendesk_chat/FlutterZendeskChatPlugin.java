@@ -44,6 +44,7 @@ import com.google.gson.FieldNamingPolicy;
 import com.zendesk.logger.Logger;
 import zendesk.chat.ChatEngine;
 import zendesk.classic.messaging.MessagingActivity;
+import androidx.appcompat.app.AppCompatActivity;
 
 
 /** FlutterZendeskChatPlugin */
