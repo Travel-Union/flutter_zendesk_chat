@@ -37,8 +37,14 @@ import zendesk.chat.OfflineForm;
 import zendesk.chat.ProfileProvider;
 import zendesk.chat.PushNotificationsProvider;
 import zendesk.chat.VisitorInfo;
-
-import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES;
+import android.util.Log;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.FieldNamingPolicy;
+import com.zendesk.logger.Logger;
+import androidx.appcompat.app.AppCompatActivity;
+import zendesk.chat.ChatEngine;
+import zendesk.classic.messaging.MessagingActivity;
 
 /** FlutterZendeskChatPlugin */
 public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandler, ActivityAware {
@@ -59,6 +65,10 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
   private ObservationScope connectionScope = null;
   private ObservationScope accountScope = null;
   private ObservationScope chatScope = null;
+  private static final Gson GSON = new GsonBuilder()
+    .setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+    .serializeNulls() // optional: include null fields in JSON
+    .create();
   private FlutterZendeskChatPlugin.EventChannelStreamHandler connectionStreamHandler = new FlutterZendeskChatPlugin.EventChannelStreamHandler();
   private FlutterZendeskChatPlugin.EventChannelStreamHandler accountStreamHandler = new FlutterZendeskChatPlugin.EventChannelStreamHandler();
   private FlutterZendeskChatPlugin.EventChannelStreamHandler agentsStreamHandler = new FlutterZendeskChatPlugin.EventChannelStreamHandler();
@@ -92,6 +102,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
         final String pushToken = call.argument("pushToken");
 
         try {
+          Logger.setLoggable(true);
           if (appId == null) {
             Chat.INSTANCE.init(activity, accountKey);
           } else {
@@ -123,12 +134,29 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
           if (tags != null && tags.size() > 0) {
             profileProvider.addVisitorTags(tags, null);
           }
-
-          bindChatListeners();
+          try {
+              Log.d("TAG", "bindChatListeners() started");
+              bindChatListeners();
+              Log.d("TAG", "bindChatListeners() completed successfully");
+          } catch (Exception e) {
+              Log.e("TAG", "Error while calling bindChatListeners()", e);
+          }
 
           Chat.INSTANCE.providers().connectionProvider().connect();
 
-          result.success(null);
+          chatProvider.observeChatState(new ObservationScope(), new Observer<ChatState>() {
+            @Override
+            public void update(ChatState chatState) {
+              Log.d("TEST", "Processing START!");
+              if (chatState != null && !chatState.getChatLogs().isEmpty()) {
+                Log.d("TEst","" + chatState.getChatLogs().size());
+              }
+            }
+          });
+
+          MessagingActivity.builder().withEngines(ChatEngine.engine()).show(activity);
+
+          // result.success(null);
         } catch (Exception e) {
           result.error("UNABLE_TO_INITIALIZE_CHAT_API", e.getMessage(), e);
           break;
@@ -144,6 +172,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
           result.error("CHAT_NOT_STARTED", null, null);
         } else {
           String message = call.argument("message");
+          Log.d("TEST", "Message " + message);
           Chat.INSTANCE.providers().chatProvider().sendMessage(message);
           result.success(null);
         }
@@ -244,66 +273,87 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
   }
 
   private void bindChatListeners() {
-    unbindChatListeners();
+    if (chatScope == null) {
+      unbindChatListeners();
+      // chatScope = new ObservationScope();
+      // Chat.INSTANCE.providers().chatProvider().observeChatState(chatScope, new Observer<ChatState>() {
+      //   @Override
+      //   public void update(ChatState chatState) {
+      //     Log.d("TEST", "Processing START!");
+      //     mainHandler.post(new Runnable() {
+      //       @Override
+      //       public void run() {
+      //         Log.d("TEST", "Processing START!");
+      //       }
+      //     });
+          // try {
+          //   final List<ChatAgent> agents = new ArrayList<>();
 
-    connectionScope = new ObservationScope();
-    Chat.INSTANCE.providers().connectionProvider().observeConnectionStatus(connectionScope,
-        new Observer<ConnectionStatus>() {
-          @Override
-          public void update(final ConnectionStatus status) {
-            mainHandler.post(new Runnable() {
-              @Override
-              public void run() {
-                connectionStreamHandler.success(status.name());
-              }
-            });
-          }
-        });
+          //   for (Agent agent : chatState.getAgents()) {
+          //     agents.add(ChatAgent.fromAgent(agent));
+          //   }
 
-    accountScope = new ObservationScope();
-    Chat.INSTANCE.providers().accountProvider().observeAccount(accountScope, new Observer<Account>() {
-      @Override
-      public void update(final Account account) {
-        mainHandler.post(new Runnable() {
-          @Override
-          public void run() {
-            accountStreamHandler.success(account.getStatus().name());
-          }
-        });
-      }
-    });
+          //   Log.d("TEST", "Processing agents log: " + agents.size());
+          //   mainHandler.post(new Runnable() {
+          //     @Override
+          //     public void run() {
+          //       Log.d("TEST", "ChatAgent: " + agents.size());
+          //       agentsStreamHandler.success(toJson(agents));
+          //     }
+          //   });
+          // } catch (Exception e) {
 
-    chatScope = new ObservationScope();
-    Chat.INSTANCE.providers().chatProvider().observeChatState(chatScope, new Observer<ChatState>() {
-      @Override
-      public void update(ChatState chatState) {
-        final List<ChatAgent> agents = new ArrayList<>();
+          // }
+          // try {
+          //   final List<ChatLogEvent> chatLogs = new ArrayList<>();
 
-        for (Agent agent : chatState.getAgents()) {
-          agents.add(ChatAgent.fromAgent(agent));
+          //   for (ChatLog chatLog : chatState.getChatLogs()) {
+          //     chatLogs.add(ChatLogEvent.fromChatLog(chatLog));
+          //   }
+          //   Log.d("TEST", "Processing chat log: " + chatLogs.size());
+          //   mainHandler.post(new Runnable() {
+          //     @Override
+          //     public void run() {
+          //       Log.d("TEST", "Processing chat log: " + chatLogs.size());
+          //       chatItemsStreamHandler.success(toJson(chatLogs));
+          //     }
+          //   });
+          // } catch (Exception e) {
+
+          // }
+      //   }
+      // });
+      Log.d("TEST", "connectionScope!");
+      connectionScope = new ObservationScope();
+      Chat.INSTANCE.providers().connectionProvider().observeConnectionStatus(connectionScope,
+          new Observer<ConnectionStatus>() {
+            @Override
+            public void update(final ConnectionStatus status) {
+              mainHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                  Log.d("TEST", "Processing StatusSSS: " + status.name());
+                  connectionStreamHandler.success(status.name());
+                }
+              });
+            }
+          });
+      Log.d("TEST", "accountScope!");
+      accountScope = new ObservationScope();
+      Chat.INSTANCE.providers().accountProvider().observeAccount(accountScope, new Observer<Account>() {
+        @Override
+        public void update(final Account account) {
+          mainHandler.post(new Runnable() {
+            @Override
+            public void run() {
+              Log.d("TEST", "AccountStreamHandler: " + account.getStatus().name());
+              accountStreamHandler.success(account.getStatus().name());
+            }
+          });
         }
+      });
+    }
 
-        mainHandler.post(new Runnable() {
-          @Override
-          public void run() {
-            agentsStreamHandler.success(toJson(agents));
-          }
-        });
-
-        final List<ChatLogEvent> chatLogs = new ArrayList<>();
-
-        for (ChatLog chatLog : chatState.getChatLogs()) {
-          chatLogs.add(ChatLogEvent.fromChatLog(chatLog));
-        }
-
-        mainHandler.post(new Runnable() {
-          @Override
-          public void run() {
-            chatItemsStreamHandler.success(toJson(chatLogs));
-          }
-        });
-      }
-    });
   }
 
   private void unbindChatListeners() {
@@ -311,10 +361,10 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
       connectionScope.cancel();
       connectionScope = null;
     }
-    if (chatScope != null && !chatScope.isCancelled()) {
-      chatScope.cancel();
-      chatScope = null;
-    }
+    // if (chatScope != null && !chatScope.isCancelled()) {
+    //   chatScope.cancel();
+    //   chatScope = null;
+    // }
     if (accountScope != null && !accountScope.isCancelled()) {
       accountScope.cancel();
       accountScope = null;
@@ -322,11 +372,7 @@ public class FlutterZendeskChatPlugin implements FlutterPlugin, MethodCallHandle
   }
 
   private String toJson(Object object) {
-    return new GsonBuilder()
-        .setFieldNamingPolicy(LOWER_CASE_WITH_UNDERSCORES)
-        .create()
-        .toJson(object)
-        .replaceAll("\\$(string|int|bool)\":", "\":");
+    return GSON.toJson(object);
   }
 
   private ChatRating toChatLogRating(String rating) {
